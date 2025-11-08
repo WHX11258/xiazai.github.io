@@ -292,6 +292,7 @@
       color: var(--dark);
       font-size: 0.95rem;
       display: inline-block;
+      word-break: break-all;
     }
 
     .scan-btn {
@@ -662,7 +663,7 @@
       <section class="scan-section">
         <div class="scan-info">
           <i class="fa fa-folder-open scan-icon"></i>
-          <span>扫描目标文件夹: <span class="folder-path">NetDisk_Resources/</span></span>
+          <span>扫描目标文件夹: <span class="folder-path">https://github.com/WHX11258/xiazai.github.io/tree/5b562c094dd021f1194cf06bb768de61cb0eb01b/NetDisk_Resources</span></span>
         </div>
         <button class="btn btn-primary scan-btn" id="scan-folder">
           <i class="fa fa-refresh"></i> 扫描资源文件
@@ -760,6 +761,15 @@
         url: 'https://pan.baidu.com/s/3efgabcd5678901234',
         password: 'x2d7',
         createdAt: '2025-11-06'
+      },
+      {
+        id: 'file4',
+        name: 'DEVC++',
+        category: '软件',
+        description: '改版',
+        url: 'https://wwzo.lanzoue.com/iJh9u3afphqh',
+        password: 'devcpp',
+        createdAt: '2025-11-05'
       }
     ];
 
@@ -783,7 +793,7 @@
 
     // 扫描文件并生成卡片
     function scanFiles() {
-      // 显示加载状态（实际开发中可添加加载动画）
+      // 显示加载状态
       showNotification('正在扫描网盘资源文件...');
       
       // 模拟网络延迟
@@ -853,7 +863,7 @@
       return fileCard;
     }
 
-    // 复制到剪贴板（实际开发中需完善）
+    // 复制到剪贴板
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
         showNotification('已复制到剪贴板');
