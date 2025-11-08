@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>镜像上传中心</title>
+  <title>GitHub镜像上传中心</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   
@@ -13,12 +13,12 @@
       theme: {
         extend: {
           colors: {
-            primary: '#165DFF',
-            secondary: '#FF7D00',
-            success: '#00B42A',
-            danger: '#F53F3F',
-            dark: '#1D2129',
-            light: '#F2F3F5'
+            primary: '#2eaadc',
+            secondary: '#ff7d00',
+            success: '#00b42a',
+            danger: '#f53f3f',
+            dark: '#1d2129',
+            light: '#f2f3f5'
           },
           fontFamily: {
             inter: ['Inter', 'system-ui', 'sans-serif'],
@@ -34,17 +34,17 @@
         content-visibility: auto;
       }
       .gradient-bg {
-        background: linear-gradient(135deg, #165DFF 0%, #0A2463 100%);
+        background: linear-gradient(135deg, #2eaadc 0%, #0a66c2 100%);
       }
       .upload-shadow {
-        box-shadow: 0 10px 30px rgba(22, 93, 255, 0.15);
+        box-shadow: 0 10px 30px rgba(46, 170, 220, 0.15);
       }
       .card-hover {
         transition: all 0.3s ease;
       }
       .card-hover:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(22, 93, 255, 0.2);
+        box-shadow: 0 15px 35px rgba(46, 170, 220, 0.2);
       }
     }
   </style>
@@ -57,8 +57,8 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <a href="#" class="flex items-center space-x-2">
-            <i class="fa fa-cloud-upload text-primary text-2xl"></i>
-            <span class="text-xl font-bold text-primary">镜像上传中心</span>
+            <i class="fa fa-github text-primary text-2xl"></i>
+            <span class="text-xl font-bold text-primary">GitHub镜像上传中心</span>
           </a>
         </div>
         
@@ -70,9 +70,14 @@
         </nav>
         
         <div class="flex items-center">
-          <button class="hidden md:block px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
-            登录
+          <button id="login-btn" class="hidden md:block px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
+            <i class="fa fa-github mr-1"></i> 登录GitHub
           </button>
+          <div id="user-info" class="hidden md:flex items-center space-x-2">
+            <img id="user-avatar" src="" alt="用户头像" class="w-8 h-8 rounded-full">
+            <span id="username" class="text-sm font-medium"></span>
+            <button id="logout-btn" class="text-sm text-gray-500 hover:text-danger">退出</button>
+          </div>
           <button class="md:hidden text-gray-700 focus:outline-none" id="mobile-menu-button">
             <i class="fa fa-bars text-xl"></i>
           </button>
@@ -87,9 +92,11 @@
         <a href="#upload" class="block text-gray-700 hover:text-primary transition-colors py-2">上传镜像</a>
         <a href="#history" class="block text-gray-700 hover:text-primary transition-colors py-2">上传历史</a>
         <a href="#help" class="block text-gray-700 hover:text-primary transition-colors py-2">帮助指南</a>
-        <button class="w-full px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
-          登录
-        </button>
+        <div id="mobile-auth">
+          <button id="mobile-login-btn" class="w-full px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
+            <i class="fa fa-github mr-1"></i> 登录GitHub
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -101,10 +108,10 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
           <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight mb-6">
-            简单高效的镜像上传平台
+            基于GitHub的镜像上传平台
           </h1>
           <p class="text-[clamp(1rem,2vw,1.25rem)] text-blue-100 mb-8">
-            轻松上传、管理和分享你的镜像文件，支持多种格式，安全可靠
+            利用GitHub的存储空间，轻松上传、管理和分享你的镜像文件
           </p>
           <a href="#upload" class="inline-block px-8 py-3 bg-secondary text-white font-medium rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
             立即上传 <i class="fa fa-arrow-right ml-2"></i>
@@ -119,11 +126,36 @@
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-12">
             <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">上传你的镜像</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">支持拖放上传或点击选择文件，支持 .iso, .img, .tar, .gz 等多种镜像格式</p>
+            <p class="text-gray-600 max-w-2xl mx-auto">支持拖放上传或点击选择文件，文件将存储在你的GitHub Releases中</p>
+          </div>
+          
+          <!-- 未登录提示 -->
+          <div id="upload-login-prompt" class="hidden text-center p-8 bg-light rounded-xl mb-8">
+            <i class="fa fa-github text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-600 mb-4">请先登录GitHub以使用上传功能</p>
+            <button id="prompt-login-btn" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+              <i class="fa fa-github mr-2"></i> 立即登录
+            </button>
+          </div>
+          
+          <!-- 仓库选择 (登录后显示) -->
+          <div id="repo-selector" class="hidden mb-8 bg-light rounded-xl p-6">
+            <h3 class="text-lg font-medium mb-4 flex items-center">
+              <i class="fa fa-repo text-primary mr-2"></i> 选择存储仓库
+            </h3>
+            <div class="grid md:grid-cols-1 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">GitHub 仓库</label>
+                <select id="repository-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+                  <option value="">加载你的仓库...</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1">镜像文件将存储在所选仓库的Releases中</p>
+              </div>
+            </div>
           </div>
           
           <!-- 上传区域 -->
-          <div id="drop-area" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center upload-shadow bg-white transition-all duration-300 hover:border-primary/50">
+          <div id="drop-area" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center upload-shadow bg-white transition-all duration-300 hover:border-primary/50 hidden">
             <div class="upload-icon mb-4">
               <i class="fa fa-cloud-upload text-5xl text-primary/70"></i>
             </div>
@@ -133,7 +165,7 @@
               <i class="fa fa-folder-open mr-2"></i>选择文件
               <input type="file" id="file-input" class="hidden" accept=".iso,.img,.tar,.gz,.zip,.rar">
             </label>
-            <p class="text-xs text-gray-400 mt-4">支持最大文件大小: 10GB</p>
+            <p class="text-xs text-gray-400 mt-4">注意：GitHub单个文件最大限制为2GB</p>
           </div>
           
           <!-- 上传进度区域 (默认隐藏) -->
@@ -157,7 +189,7 @@
           </div>
           
           <!-- 上传设置 -->
-          <div class="mt-8 bg-light rounded-xl p-6">
+          <div class="mt-8 bg-light rounded-xl p-6 hidden" id="upload-settings">
             <h3 class="text-lg font-medium mb-4 flex items-center">
               <i class="fa fa-cog text-primary mr-2"></i> 上传设置
             </h3>
@@ -177,13 +209,13 @@
                 </select>
               </div>
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">镜像描述 (可选)</label>
-                <textarea id="image-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="描述你的镜像内容、版本等信息"></textarea>
+                <label class="block text-sm font-medium text-gray-700 mb-1">发布描述 (可选)</label>
+                <textarea id="release-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="描述你的镜像内容、版本等信息"></textarea>
               </div>
             </div>
             <div class="mt-4 flex justify-end">
               <button id="start-upload" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                <i class="fa fa-upload mr-2"></i>开始上传
+                <i class="fa fa-upload mr-2"></i>发布到GitHub
               </button>
             </div>
           </div>
@@ -197,131 +229,55 @@
         <div class="max-w-6xl mx-auto">
           <div class="text-center mb-12">
             <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">上传历史</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">查看和管理你之前上传的镜像文件</p>
+            <p class="text-gray-600 max-w-2xl mx-auto">查看你在GitHub上发布的镜像文件</p>
+          </div>
+          
+          <!-- 历史记录加载中 -->
+          <div id="history-loading" class="text-center py-12">
+            <i class="fa fa-circle-o-notch fa-spin text-3xl text-primary mb-4"></i>
+            <p class="text-gray-600">加载你的GitHub发布记录...</p>
+          </div>
+          
+          <!-- 未登录提示 -->
+          <div id="history-login-prompt" class="hidden text-center p-12 bg-white rounded-xl">
+            <i class="fa fa-github text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-600 mb-4">请先登录GitHub以查看发布历史</p>
+            <button id="history-login-btn" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+              <i class="fa fa-github mr-2"></i> 立即登录
+            </button>
+          </div>
+          
+          <!-- 无历史记录 -->
+          <div id="no-history" class="hidden text-center p-12 bg-white rounded-xl">
+            <i class="fa fa-folder-open-o text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-600">暂无发布记录</p>
           </div>
           
           <!-- 搜索和筛选 -->
-          <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div id="history-controls" class="hidden mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="relative w-full md:w-64">
-              <input type="text" placeholder="搜索镜像..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+              <input type="text" id="history-search" placeholder="搜索镜像..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
               <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
             <div class="flex items-center gap-3">
-              <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
-                <option value="all">所有分类</option>
-                <option value="os">操作系统</option>
-                <option value="app">应用程序</option>
-                <option value="game">游戏</option>
-                <option value="other">其他</option>
+              <select id="history-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+                <option value="all">所有仓库</option>
+                <!-- 仓库选项将通过JS动态生成 -->
               </select>
-              <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <button id="apply-filter" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                 <i class="fa fa-filter mr-1"></i> 筛选
               </button>
             </div>
           </div>
           
           <!-- 历史列表 -->
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 历史项目 1 -->
-            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
-              <div class="p-5">
-                <div class="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 class="font-semibold text-lg">Ubuntu 22.04 LTS</h3>
-                    <p class="text-sm text-gray-500">操作系统</p>
-                  </div>
-                  <span class="px-2 py-1 text-xs font-medium bg-success/10 text-success rounded-full">已完成</span>
-                </div>
-                <div class="flex items-center text-sm text-gray-500 mb-4">
-                  <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2023-06-15</span>
-                  <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> 3.8 GB</span>
-                </div>
-                <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
-                  <div class="flex gap-2">
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="下载">
-                      <i class="fa fa-download"></i>
-                    </button>
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="分享">
-                      <i class="fa fa-share-alt"></i>
-                    </button>
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="复制链接">
-                      <i class="fa fa-link"></i>
-                    </button>
-                  </div>
-                  <button class="p-2 text-gray-500 hover:text-danger transition-colors" title="删除">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 历史项目 2 -->
-            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
-              <div class="p-5">
-                <div class="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 class="font-semibold text-lg">Windows 11 Pro</h3>
-                    <p class="text-sm text-gray-500">操作系统</p>
-                  </div>
-                  <span class="px-2 py-1 text-xs font-medium bg-success/10 text-success rounded-full">已完成</span>
-                </div>
-                <div class="flex items-center text-sm text-gray-500 mb-4">
-                  <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2023-06-10</span>
-                  <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> 5.2 GB</span>
-                </div>
-                <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
-                  <div class="flex gap-2">
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="下载">
-                      <i class="fa fa-download"></i>
-                    </button>
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="分享">
-                      <i class="fa fa-share-alt"></i>
-                    </button>
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="复制链接">
-                      <i class="fa fa-link"></i>
-                    </button>
-                  </div>
-                  <button class="p-2 text-gray-500 hover:text-danger transition-colors" title="删除">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 历史项目 3 -->
-            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
-              <div class="p-5">
-                <div class="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 class="font-semibold text-lg">Docker 镜像合集</h3>
-                    <p class="text-sm text-gray-500">应用程序</p>
-                  </div>
-                  <span class="px-2 py-1 text-xs font-medium bg-warning/10 text-warning rounded-full">部分完成</span>
-                </div>
-                <div class="flex items-center text-sm text-gray-500 mb-4">
-                  <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2023-06-05</span>
-                  <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> 8.7 GB</span>
-                </div>
-                <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
-                  <div class="flex gap-2">
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="继续上传">
-                      <i class="fa fa-resume"></i>
-                    </button>
-                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="分享">
-                      <i class="fa fa-share-alt"></i>
-                    </button>
-                  </div>
-                  <button class="p-2 text-gray-500 hover:text-danger transition-colors" title="删除">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div id="history-list" class="hidden grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 历史项目将通过JS动态生成 -->
           </div>
           
           <!-- 加载更多 -->
-          <div class="mt-10 text-center">
-            <button class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+          <div id="load-more-container" class="hidden mt-10 text-center">
+            <button id="load-more" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
               加载更多 <i class="fa fa-chevron-down ml-1"></i>
             </button>
           </div>
@@ -342,11 +298,11 @@
             <!-- 问题 1 -->
             <div class="border border-gray-200 rounded-xl overflow-hidden">
               <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
-                <span>支持哪些镜像文件格式？</span>
+                <span>文件存储在哪里？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">我们支持多种常见的镜像文件格式，包括但不限于：.iso, .img, .tar, .gz, .zip, .rar, .7z, .bz2, .xz 等。如果你有特殊格式的文件需要上传，请联系我们的客服进行咨询。</p>
+                <p class="text-gray-600">所有上传的文件都存储在你GitHub账户下所选仓库的Releases中。这意味着你完全控制你的文件，它们不会存储在第三方服务器上。</p>
               </div>
             </div>
             
@@ -357,7 +313,7 @@
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">目前单个文件的最大上传限制为 10GB。对于更大的文件，我们建议你分割成多个部分进行上传，或者使用我们的客户端工具进行断点续传。高级会员可以享受更高的上传限制。</p>
+                <p class="text-gray-600">受GitHub限制，单个文件最大为2GB。对于更大的文件，我们建议你分割成多个部分进行上传，或者使用GitHub Desktop等工具。</p>
               </div>
             </div>
             
@@ -368,7 +324,7 @@
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">普通用户上传的文件会保存 30 天，高级会员可以享受文件永久保存的服务。系统会定期清理过期文件，建议你及时备份重要的镜像文件。</p>
+                <p class="text-gray-600">文件会永久保存在你的GitHub仓库中，直到你手动删除对应的Release。你可以在任何时候通过GitHub仓库管理界面查看和管理这些文件。</p>
               </div>
             </div>
             
@@ -379,27 +335,27 @@
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">在上传历史中找到你想要分享的文件，点击分享按钮可以生成一个临时的分享链接。你可以将该链接发送给他人，也可以设置分享密码和有效期。注意：分享链接过期后需要重新生成。</p>
+                <p class="text-gray-600">每个上传的文件都会有一个直接下载链接，你可以通过"复制链接"按钮获取。对于公共仓库，任何人都可以通过该链接下载；对于私有仓库，只有获得授权的用户才能下载。</p>
               </div>
             </div>
             
             <!-- 问题 5 -->
             <div class="border border-gray-200 rounded-xl overflow-hidden">
               <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
-                <span>上传过程中中断了怎么办？</span>
+                <span>需要什么权限？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">我们的系统支持断点续传功能。如果上传过程中因为网络问题或其他原因中断，你可以在上传历史中找到该文件，点击"继续上传"按钮恢复上传过程，无需重新上传整个文件。</p>
+                <p class="text-gray-600">我们需要"repo"权限来访问你的仓库和创建Releases。这些权限仅用于上传和管理你的镜像文件，我们不会修改你的代码或其他仓库内容。你可以随时在GitHub的授权应用页面撤销权限。</p>
               </div>
             </div>
           </div>
           
           <!-- 联系支持 -->
           <div class="mt-12 text-center">
-            <p class="text-gray-600 mb-4">还有其他问题？请联系我们的支持团队</p>
-            <a href="#" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
-              <i class="fa fa-envelope mr-2"></i> 联系支持
+            <p class="text-gray-600 mb-4">还有其他问题？请查看GitHub文档或提交issue</p>
+            <a href="https://github.com/whx11258/xiazai.github.io/issues" target="_blank" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+              <i class="fa fa-github mr-2"></i> 提交Issue
             </a>
           </div>
         </div>
@@ -407,20 +363,46 @@
     </section>
   </main>
 
+  <!-- 登录模态框 -->
+  <div id="login-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-2xl transform transition-all">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold">通过GitHub登录</h3>
+        <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+          <i class="fa fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="text-center">
+        <i class="fa fa-github text-5xl text-gray-700 mb-4"></i>
+        <p class="text-gray-600 mb-6">我们将引导你前往GitHub进行授权，授权后可以访问你的仓库并创建Releases</p>
+        <a href="https://github.com/login/oauth/authorize?client_id=YOUR_CLIENT_ID&scope=repo" class="inline-block w-full px-6 py-3 bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors">
+          <i class="fa fa-github mr-2"></i> 授权GitHub登录
+        </a>
+        <p class="text-center text-sm text-gray-500 mt-4">
+          我们不会存储你的GitHub密码
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知提示 -->
+  <div id="notification" class="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center">
+    <i id="notification-icon" class="mr-2 text-xl"></i>
+    <span id="notification-message"></span>
+  </div>
+
   <!-- 页脚 -->
   <footer class="bg-dark text-white py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <div class="flex items-center space-x-2 mb-4">
-            <i class="fa fa-cloud-upload text-primary text-2xl"></i>
-            <span class="text-xl font-bold">镜像上传中心</span>
+            <i class="fa fa-github text-primary text-2xl"></i>
+            <span class="text-xl font-bold">GitHub镜像上传中心</span>
           </div>
-          <p class="text-gray-400 mb-4">简单高效的镜像文件上传和管理平台，为你的数据提供安全可靠的存储解决方案。</p>
+          <p class="text-gray-400 mb-4">基于GitHub的镜像文件上传和管理平台，让你的文件存储更安全可靠。</p>
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-github text-xl"></i></a>
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-twitter text-xl"></i></a>
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-linkedin text-xl"></i></a>
+            <a href="https://github.com/whx11258/xiazai.github.io" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-github text-xl"></i></a>
           </div>
         </div>
         
@@ -435,28 +417,26 @@
         </div>
         
         <div>
-          <h3 class="text-lg font-medium mb-4">资源</h3>
+          <h3 class="text-lg font-medium mb-4">GitHub资源</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">使用教程</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">API 文档</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">客户端工具</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">常见问题</a></li>
+            <li><a href="https://docs.github.com/cn/repositories/releasing-projects-on-github/about-releases" target="_blank" class="text-gray-400 hover:text-white transition-colors">关于Releases</a></li>
+            <li><a href="https://docs.github.com/cn/rest" target="_blank" class="text-gray-400 hover:text-white transition-colors">GitHub API文档</a></li>
+            <li><a href="https://github.com/settings/applications" target="_blank" class="text-gray-400 hover:text-white transition-colors">授权应用管理</a></li>
           </ul>
         </div>
         
         <div>
-          <h3 class="text-lg font-medium mb-4">法律</h3>
+          <h3 class="text-lg font-medium mb-4">项目</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">服务条款</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">版权声明</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie 政策</a></li>
+            <li><a href="https://github.com/whx11258/xiazai.github.io" target="_blank" class="text-gray-400 hover:text-white transition-colors">源码仓库</a></li>
+            <li><a href="https://github.com/whx11258/xiazai.github.io/issues" target="_blank" class="text-gray-400 hover:text-white transition-colors">提交问题</a></li>
+            <li><a href="https://github.com/whx11258/xiazai.github.io/blob/main/LICENSE" target="_blank" class="text-gray-400 hover:text-white transition-colors">开源协议</a></li>
           </ul>
         </div>
       </div>
       
       <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-        <p>&copy; 2023 镜像上传中心. 保留所有权利.</p>
+        <p>&copy; 2023 GitHub镜像上传中心. 基于GitHub构建。</p>
         <p class="mt-1">github:xiazai.github.io | https://whx11258.github.io/xiazai.github.io/</p>
       </div>
     </div>
@@ -464,50 +444,16 @@
 
   <!-- JavaScript -->
   <script>
-    // 移动端菜单切换
+    // GitHub API 基础URL
+    const GITHUB_API_BASE = 'https://api.github.com';
+    // 你的GitHub OAuth应用客户端ID (需要替换为你自己的)
+    const CLIENT_ID = 'Iv23liTnrkYA0h3cc8ZG';
+    // 应用回调URL (需要与GitHub OAuth应用设置一致)
+    const REDIRECT_URI = 'https://whx11258.github.io/xiazai.github.io/';
+    
+    // DOM元素
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-    
-    // 导航栏滚动效果
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('header');
-      if (window.scrollY > 50) {
-        header.classList.add('shadow');
-        header.classList.remove('shadow-sm');
-      } else {
-        header.classList.remove('shadow');
-        header.classList.add('shadow-sm');
-      }
-    });
-    
-    // 平滑滚动
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-          
-          // 关闭移动菜单
-          if (!mobileMenu.classList.contains('hidden')) {
-            mobileMenu.classList.add('hidden');
-          }
-        }
-      });
-    });
-    
-    // 文件上传功能
     const dropArea = document.getElementById('drop-area');
     const fileInput = document.getElementById('file-input');
     const fileNameElement = document.getElementById('file-name');
@@ -519,27 +465,426 @@
     const startUploadButton = document.getElementById('start-upload');
     const cancelUploadButton = document.getElementById('cancel-upload');
     const imageNameInput = document.getElementById('image-name');
+    const imageCategoryInput = document.getElementById('image-category');
+    const releaseDescriptionInput = document.getElementById('release-description');
+    const helpQuestions = document.querySelectorAll('.help-question');
+    const loginBtn = document.getElementById('login-btn');
+    const mobileLoginBtn = document.getElementById('mobile-login-btn');
+    const promptLoginBtn = document.getElementById('prompt-login-btn');
+    const historyLoginBtn = document.getElementById('history-login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userInfo = document.getElementById('user-info');
+    const usernameElement = document.getElementById('username');
+    const userAvatarElement = document.getElementById('user-avatar');
+    const uploadLoginPrompt = document.getElementById('upload-login-prompt');
+    const repoSelector = document.getElementById('repo-selector');
+    const repositorySelect = document.getElementById('repository-select');
+    const uploadSettings = document.getElementById('upload-settings');
+    const loginModal = document.getElementById('login-modal');
+    const closeModal = document.getElementById('close-modal');
+    const notification = document.getElementById('notification');
+    const notificationIcon = document.getElementById('notification-icon');
+    const notificationMessage = document.getElementById('notification-message');
+    const historyLoading = document.getElementById('history-loading');
+    const historyLoginPrompt = document.getElementById('history-login-prompt');
+    const noHistory = document.getElementById('no-history');
+    const historyControls = document.getElementById('history-controls');
+    const historyList = document.getElementById('history-list');
+    const loadMoreContainer = document.getElementById('load-more-container');
+    const loadMoreBtn = document.getElementById('load-more');
+    const historySearch = document.getElementById('history-search');
+    const historyFilter = document.getElementById('history-filter');
+    const applyFilterBtn = document.getElementById('apply-filter');
     
+    // 状态变量
     let selectedFile = null;
-    let uploadInterval = null;
+    let uploadXHR = null;
+    let isLoggedIn = false;
+    let currentUser = null;
+    let accessToken = null;
+    let userRepos = [];
+    let currentPage = 1;
+    let hasMoreHistory = true;
+    let allReleases = [];
     
-    // 拖放事件
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      dropArea.addEventListener(eventName, preventDefaults, false);
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      // 检查URL中是否有授权码
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      
+      if (code) {
+        // 从URL参数中移除code
+        urlParams.delete('code');
+        window.history.replaceState({}, document.title, window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : ''));
+        
+        // 交换访问令牌
+        exchangeCodeForToken(code);
+      } else {
+        // 检查本地存储中的登录状态
+        checkAuthStatus();
+      }
+      
+      setupEventListeners();
     });
     
+    // 检查登录状态
+    function checkAuthStatus() {
+      const token = localStorage.getItem('githubAccessToken');
+      const user = localStorage.getItem('githubUser');
+      
+      if (token && user) {
+        isLoggedIn = true;
+        currentUser = JSON.parse(user);
+        accessToken = token;
+        updateUIForAuth();
+        loadUserRepos();
+        loadReleaseHistory();
+      } else {
+        isLoggedIn = false;
+        currentUser = null;
+        accessToken = null;
+        updateUIForAuth();
+      }
+    }
+    
+    // 用授权码交换访问令牌
+    function exchangeCodeForToken(code) {
+      // 注意：在实际应用中，这一步应该在后端完成，以保护你的客户端密钥
+      // 这里为了演示简化处理，实际使用时请修改为后端API调用
+      const clientSecret = 'YOUR_CLIENT_SECRET'; // 仅用于演示，实际应存储在后端
+      
+      fetch('https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          client_id: CLIENT_ID,
+          client_secret: clientSecret,
+          code: code
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.access_token) {
+          accessToken = data.access_token;
+          localStorage.setItem('githubAccessToken', accessToken);
+          
+          // 获取用户信息
+          fetchUserInfo();
+        } else {
+          showNotification('登录失败: ' + (data.error_description || '未知错误'), 'error');
+        }
+      })
+      .catch(error => {
+        showNotification('登录过程中发生错误', 'error');
+        console.error(error);
+      });
+    }
+    
+    // 获取用户信息
+    function fetchUserInfo() {
+      fetch(`${GITHUB_API_BASE}/user`, {
+        headers: {
+          'Authorization': `token ${accessToken}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('获取用户信息失败');
+        return response.json();
+      })
+      .then(user => {
+        currentUser = user;
+        localStorage.setItem('githubUser', JSON.stringify(user));
+        isLoggedIn = true;
+        updateUIForAuth();
+        loadUserRepos();
+        loadReleaseHistory();
+        showNotification(`欢迎回来，${user.login}`, 'success');
+      })
+      .catch(error => {
+        showNotification(error.message, 'error');
+        logout();
+      });
+    }
+    
+    // 更新登录状态相关UI
+    function updateUIForAuth() {
+      if (isLoggedIn) {
+        // 显示用户信息，隐藏登录按钮
+        loginBtn.classList.add('hidden');
+        mobileLoginBtn.parentElement.classList.add('hidden');
+        userInfo.classList.remove('hidden');
+        usernameElement.textContent = currentUser.login;
+        userAvatarElement.src = currentUser.avatar_url;
+        
+        // 显示上传区域，隐藏登录提示
+        uploadLoginPrompt.classList.add('hidden');
+        repoSelector.classList.remove('hidden');
+        
+        // 处理历史区域
+        historyLoading.classList.remove('hidden');
+        historyLoginPrompt.classList.add('hidden');
+      } else {
+        // 显示登录按钮，隐藏用户信息
+        loginBtn.classList.remove('hidden');
+        mobileLoginBtn.parentElement.classList.remove('hidden');
+        userInfo.classList.add('hidden');
+        
+        // 显示登录提示，隐藏上传区域
+        uploadLoginPrompt.classList.remove('hidden');
+        repoSelector.classList.add('hidden');
+        dropArea.classList.add('hidden');
+        uploadSettings.classList.add('hidden');
+        
+        // 处理历史区域
+        historyLoading.classList.add('hidden');
+        historyLoginPrompt.classList.remove('hidden');
+        historyControls.classList.add('hidden');
+        historyList.classList.add('hidden');
+        noHistory.classList.add('hidden');
+        loadMoreContainer.classList.add('hidden');
+      }
+    }
+    
+    // 加载用户仓库
+    function loadUserRepos() {
+      repositorySelect.innerHTML = '<option value="">加载你的仓库...</option>';
+      
+      fetch(`${GITHUB_API_BASE}/user/repos?per_page=100&sort=updated`, {
+        headers: {
+          'Authorization': `token ${accessToken}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('获取仓库列表失败');
+        return response.json();
+      })
+      .then(repos => {
+        userRepos = repos;
+        
+        // 更新仓库选择器
+        repositorySelect.innerHTML = '<option value="">选择仓库</option>';
+        
+        repos.forEach(repo => {
+          const option = document.createElement('option');
+          option.value = `${repo.owner.login}/${repo.name}`;
+          option.textContent = `${repo.owner.login}/${repo.name}`;
+          repositorySelect.appendChild(option);
+        });
+        
+        // 添加仓库筛选器选项
+        historyFilter.innerHTML = '<option value="all">所有仓库</option>';
+        repos.forEach(repo => {
+          const option = document.createElement('option');
+          option.value = `${repo.owner.login}/${repo.name}`;
+          option.textContent = `${repo.owner.login}/${repo.name}`;
+          historyFilter.appendChild(option);
+        });
+        
+        // 仓库选择变化时显示上传区域
+        repositorySelect.addEventListener('change', () => {
+          if (repositorySelect.value) {
+            dropArea.classList.remove('hidden');
+            uploadSettings.classList.remove('hidden');
+          } else {
+            dropArea.classList.add('hidden');
+            uploadSettings.classList.add('hidden');
+            resetUploadArea();
+          }
+        });
+      })
+      .catch(error => {
+        showNotification(error.message, 'error');
+        console.error(error);
+      });
+    }
+    
+    // 设置所有事件监听器
+    function setupEventListeners() {
+      // 移动端菜单切换
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      
+      // 导航栏滚动效果
+      window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+          header.classList.add('shadow');
+          header.classList.remove('shadow-sm');
+        } else {
+          header.classList.remove('shadow');
+          header.classList.add('shadow-sm');
+        }
+      });
+      
+      // 平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+            
+            // 关闭移动菜单
+            if (!mobileMenu.classList.contains('hidden')) {
+              mobileMenu.classList.add('hidden');
+            }
+          }
+        });
+      });
+      
+      // 登录相关
+      loginBtn.addEventListener('click', openLoginModal);
+      mobileLoginBtn.addEventListener('click', openLoginModal);
+      promptLoginBtn.addEventListener('click', openLoginModal);
+      historyLoginBtn.addEventListener('click', openLoginModal);
+      closeModal.addEventListener('click', closeLoginModal);
+      logoutBtn.addEventListener('click', logout);
+      
+      // 点击模态框外部关闭
+      loginModal.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+          closeLoginModal();
+        }
+      });
+      
+      // 拖放事件
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      // 处理文件拖放
+      dropArea.addEventListener('drop', handleDrop, false);
+      
+      // 处理文件选择
+      fileInput.addEventListener('change', function() {
+        if (this.files.length) {
+          handleFiles(this.files[0]);
+        }
+      });
+      
+      // 点击上传区域触发文件选择
+      dropArea.addEventListener('click', function(e) {
+        if (!e.target.closest('label') && !e.target.closest('input')) {
+          fileInput.click();
+        }
+      });
+      
+      // 开始上传
+      startUploadButton.addEventListener('click', startUpload);
+      
+      // 取消上传
+      cancelUploadButton.addEventListener('click', cancelUpload);
+      
+      // 帮助指南折叠面板
+      helpQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+          const answer = question.nextElementSibling;
+          const icon = question.querySelector('i');
+          
+          answer.classList.toggle('hidden');
+          icon.classList.toggle('rotate-180');
+        });
+      });
+      
+      // 历史记录相关
+      loadMoreBtn.addEventListener('click', loadMoreHistory);
+      applyFilterBtn.addEventListener('click', applyFilters);
+      historySearch.addEventListener('input', debounce(applyFilters, 500));
+      historyFilter.addEventListener('change', applyFilters);
+    }
+    
+    // 登出处理
+    function logout() {
+      // 清除本地存储
+      localStorage.removeItem('githubAccessToken');
+      localStorage.removeItem('githubUser');
+      
+      // 更新状态和UI
+      isLoggedIn = false;
+      currentUser = null;
+      accessToken = null;
+      userRepos = [];
+      allReleases = [];
+      
+      updateUIForAuth();
+      showNotification('已成功退出登录', 'info');
+    }
+    
+    // 打开登录模态框
+    function openLoginModal() {
+      loginModal.classList.remove('hidden');
+      loginModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // 关闭登录模态框
+    function closeLoginModal() {
+      loginModal.classList.add('hidden');
+      loginModal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+    
+    // 显示通知
+    function showNotification(message, type = 'info') {
+      // 设置通知内容和样式
+      notificationMessage.textContent = message;
+      
+      // 设置图标和背景色
+      notificationIcon.className = '';
+      if (type === 'success') {
+        notificationIcon.classList.add('fa', 'fa-check-circle', 'text-success');
+        notification.classList.add('bg-success/10', 'text-success', 'border', 'border-success/30');
+      } else if (type === 'error') {
+        notificationIcon.classList.add('fa', 'fa-exclamation-circle', 'text-danger');
+        notification.classList.add('bg-danger/10', 'text-danger', 'border', 'border-danger/30');
+      } else {
+        notificationIcon.classList.add('fa', 'fa-info-circle', 'text-primary');
+        notification.classList.add('bg-primary/10', 'text-primary', 'border', 'border-primary/30');
+      }
+      
+      // 显示通知
+      notification.classList.remove('translate-y-20', 'opacity-0');
+      notification.classList.add('translate-y-0', 'opacity-100');
+      
+      // 3秒后隐藏通知
+      setTimeout(() => {
+        notification.classList.remove('translate-y-0', 'opacity-100');
+        notification.classList.add('translate-y-20', 'opacity-0');
+        
+        // 清除类以避免冲突
+        setTimeout(() => {
+          notification.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center';
+        }, 300);
+      }, 3000);
+    }
+    
+    // 拖放辅助函数
     function preventDefaults(e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropArea.addEventListener(eventName, highlight, false);
-    });
-    
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropArea.addEventListener(eventName, unhighlight, false);
-    });
     
     function highlight() {
       dropArea.classList.add('border-primary');
@@ -552,8 +897,6 @@
     }
     
     // 处理文件拖放
-    dropArea.addEventListener('drop', handleDrop, false);
-    
     function handleDrop(e) {
       const dt = e.dataTransfer;
       const files = dt.files;
@@ -563,22 +906,14 @@
       }
     }
     
-    // 处理文件选择
-    fileInput.addEventListener('change', function() {
-      if (this.files.length) {
-        handleFiles(this.files[0]);
-      }
-    });
-    
-    // 点击上传区域触发文件选择
-    dropArea.addEventListener('click', function(e) {
-      if (!e.target.closest('label') && !e.target.closest('input')) {
-        fileInput.click();
-      }
-    });
-    
     // 处理选中的文件
     function handleFiles(file) {
+      // 检查文件大小 (GitHub限制2GB)
+      if (file.size > 2 * 1024 * 1024 * 1024) {
+        showNotification('文件大小不能超过2GB（GitHub限制）', 'error');
+        return;
+      }
+      
       selectedFile = file;
       fileNameElement.textContent = file.name;
       
@@ -597,60 +932,142 @@
       startUploadButton.disabled = false;
     }
     
-    // 开始上传
-    startUploadButton.addEventListener('click', function() {
-      if (!selectedFile) return;
+    // 开始上传到GitHub Releases
+    function startUpload() {
+      if (!selectedFile || !repositorySelect.value) return;
+      
+      // 验证必填字段
+      if (!imageNameInput.value.trim()) {
+        showNotification('请输入镜像名称', 'error');
+        return;
+      }
       
       // 禁用按钮
       startUploadButton.disabled = true;
       
-      // 模拟上传进度
-      let progress = 0;
-      const fileSizeMB = (selectedFile.size / (1024 * 1024)).toFixed(2);
-      const startTime = new Date().getTime();
+      const [owner, repo] = repositorySelect.value.split('/');
+      const releaseName = imageNameInput.value.trim();
+      const tagName = `v${new Date().getTime()}`; // 使用时间戳作为标签名
+      const description = releaseDescriptionInput.value.trim() || `上传于 ${new Date().toLocaleString()}`;
       
-      uploadInterval = setInterval(() => {
-        // 随机增加进度，模拟真实上传
-        const increment = Math.random() * 5;
-        progress = Math.min(progress + increment, 100);
-        
-        // 更新进度条
-        progressBar.style.width = `${progress}%`;
-        progressPercentage.textContent = `${Math.round(progress)}%`;
-        
-        // 计算上传速度和剩余时间
-        const elapsedTime = (new Date().getTime() - startTime) / 1000; // 秒
-        const uploadedMB = (progress / 100) * parseFloat(fileSizeMB);
-        const speed = (uploadedMB / elapsedTime).toFixed(2);
-        uploadSpeed.textContent = `${speed} MB/s`;
-        
-        // 计算剩余时间
-        if (progress > 0) {
-          const estimatedTotalTime = (elapsedTime / progress) * 100;
-          const remainingTime = Math.max(0, estimatedTotalTime - elapsedTime);
-          uploadRemaining.textContent = `剩余时间: ${formatTime(remainingTime)}`;
-        }
-        
-        // 上传完成
-        if (progress === 100) {
-          clearInterval(uploadInterval);
+      // 步骤1: 创建Release
+      createRelease(owner, repo, tagName, releaseName, description)
+        .then(release => {
+          // 步骤2: 上传资产
+          return uploadAsset(owner, repo, release.id, selectedFile);
+        })
+        .then(asset => {
           uploadRemaining.textContent = '上传完成!';
+          showNotification('文件已成功发布到GitHub Releases', 'success');
           
-          // 2秒后重置上传区域
+          // 重置表单并刷新历史记录
           setTimeout(() => {
             resetUploadArea();
+            resetUploadForm();
+            loadReleaseHistory(); // 重新加载历史记录
           }, 2000);
-        }
-      }, 500);
-    });
+        })
+        .catch(error => {
+          showNotification(error.message || '上传失败', 'error');
+          startUploadButton.disabled = false;
+        });
+    }
+    
+    // 创建GitHub Release
+    function createRelease(owner, repo, tagName, name, body) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${GITHUB_API_BASE}/repos/${owner}/${repo}/releases`, true);
+        
+        xhr.setRequestHeader('Authorization', `token ${accessToken}`);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+        
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error(`创建Release失败: ${xhr.statusText}`));
+          }
+        };
+        
+        xhr.onerror = () => {
+          reject(new Error('创建Release时发生网络错误'));
+        };
+        
+        xhr.send(JSON.stringify({
+          tag_name: tagName,
+          name: name,
+          body: body,
+          draft: false,
+          prerelease: false
+        }));
+      });
+    }
+    
+    // 上传资产到Release
+    function uploadAsset(owner, repo, releaseId, file) {
+      return new Promise((resolve, reject) => {
+        const fileName = encodeURIComponent(file.name);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/${releaseId}/assets?name=${fileName}`, true);
+        
+        xhr.setRequestHeader('Authorization', `token ${accessToken}`);
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+        xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+        
+        // 上传进度处理
+        const startTime = new Date().getTime();
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            const progress = (e.loaded / e.total) * 100;
+            
+            // 更新进度条
+            progressBar.style.width = `${progress}%`;
+            progressPercentage.textContent = `${Math.round(progress)}%`;
+            
+            // 计算上传速度和剩余时间
+            const elapsedTime = (new Date().getTime() - startTime) / 1000; // 秒
+            const uploadedMB = (progress / 100) * parseFloat(fileSizeMB);
+            const speed = (uploadedMB / elapsedTime).toFixed(2);
+            uploadSpeed.textContent = `${speed} MB/s`;
+            
+            // 计算剩余时间
+            if (progress > 0) {
+              const estimatedTotalTime = (elapsedTime / progress) * 100;
+              const remainingTime = Math.max(0, estimatedTotalTime - elapsedTime);
+              uploadRemaining.textContent = `剩余时间: ${formatTime(remainingTime)}`;
+            }
+          }
+        });
+        
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error(`上传文件失败: ${xhr.statusText}`));
+          }
+        };
+        
+        xhr.onerror = () => {
+          reject(new Error('上传文件时发生网络错误'));
+        };
+        
+        xhr.send(file);
+      });
+    }
     
     // 取消上传
-    cancelUploadButton.addEventListener('click', function() {
-      if (uploadInterval) {
-        clearInterval(uploadInterval);
+    function cancelUpload() {
+      if (uploadXHR) {
+        uploadXHR.abort();
+        uploadXHR = null;
       }
       resetUploadArea();
-    });
+      showNotification('上传已取消', 'info');
+    }
     
     // 重置上传区域
     function resetUploadArea() {
@@ -658,7 +1075,17 @@
       uploadProgress.classList.add('hidden');
       progressBar.style.width = '0%';
       progressPercentage.textContent = '0%';
+      uploadSpeed.textContent = '0 MB/s';
+      uploadRemaining.textContent = '剩余时间: 计算中...';
       startUploadButton.disabled = true;
+    }
+    
+    // 重置上传表单
+    function resetUploadForm() {
+      imageNameInput.value = '';
+      imageCategoryInput.value = '';
+      releaseDescriptionInput.value = '';
+      fileInput.value = '';
     }
     
     // 格式化时间（秒 -> 分:秒）
@@ -668,18 +1095,277 @@
       return `${mins}:${secs < 10 ? '0' + secs : secs}`;
     }
     
-    // 帮助指南折叠面板
-    const helpQuestions = document.querySelectorAll('.help-question');
-    
-    helpQuestions.forEach(question => {
-      question.addEventListener('click', () => {
-        const answer = question.nextElementSibling;
-        const icon = question.querySelector('i');
-        
-        answer.classList.toggle('hidden');
-        icon.classList.toggle('rotate-180');
+    // 加载发布历史
+    function loadReleaseHistory(reset = true) {
+      if (!isLoggedIn) return;
+      
+      if (reset) {
+        currentPage = 1;
+        allReleases = [];
+        historyList.innerHTML = '';
+        hasMoreHistory = true;
+      }
+      
+      if (!hasMoreHistory) return;
+      
+      // 显示加载状态
+      if (currentPage === 1) {
+        historyLoading.classList.remove('hidden');
+        noHistory.classList.add('hidden');
+        historyList.classList.add('hidden');
+        loadMoreContainer.classList.add('hidden');
+      } else {
+        loadMoreBtn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-1"></i> 加载中...';
+        loadMoreBtn.disabled = true;
+      }
+      
+      // 对于每个仓库，获取其releases
+      const promises = userRepos.slice((currentPage - 1) * 5, currentPage * 5).map(repo => {
+        return fetch(`${GITHUB_API_BASE}/repos/${repo.owner.login}/${repo.name}/releases`, {
+          headers: {
+            'Authorization': `token ${accessToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        })
+        .then(response => {
+          if (!response.ok) return [];
+          return response.json();
+        })
+        .then(releases => {
+          // 为每个release添加仓库信息
+          return releases.map(release => ({
+            ...release,
+            repoFullName: `${repo.owner.login}/${repo.name}`,
+            repoName: repo.name,
+            ownerLogin: repo.owner.login
+          }));
+        });
       });
-    });
+      
+      Promise.all(promises)
+        .then(releaseArrays => {
+          // 合并所有仓库的releases并按创建时间排序
+          const newReleases = [].concat(...releaseArrays)
+            .filter(release => !release.draft) // 排除草稿
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          
+          allReleases = [...allReleases, ...newReleases];
+          
+          // 隐藏加载状态
+          historyLoading.classList.add('hidden');
+          historyControls.classList.remove('hidden');
+          
+          // 应用当前筛选条件
+          applyFilters(false);
+          
+          // 检查是否有更多仓库要加载
+          hasMoreHistory = currentPage * 5 < userRepos.length;
+          
+          if (hasMoreHistory) {
+            loadMoreContainer.classList.remove('hidden');
+            loadMoreBtn.innerHTML = '加载更多 <i class="fa fa-chevron-down ml-1"></i>';
+            loadMoreBtn.disabled = false;
+          } else {
+            loadMoreContainer.classList.add('hidden');
+          }
+          
+          currentPage++;
+        })
+        .catch(error => {
+          showNotification('加载发布历史失败', 'error');
+          console.error(error);
+          historyLoading.classList.add('hidden');
+          loadMoreBtn.innerHTML = '加载更多 <i class="fa fa-chevron-down ml-1"></i>';
+          loadMoreBtn.disabled = false;
+        });
+    }
+    
+    // 添加发布到历史列表
+    function addReleaseToHistoryList(release) {
+      if (release.assets.length === 0) return;
+      
+      const asset = release.assets[0];
+      
+      // 格式化文件大小
+      const fileSize = asset.size > 1024 * 1024 
+        ? (asset.size / (1024 * 1024)).toFixed(1) + ' MB'
+        : (asset.size / 1024).toFixed(1) + ' KB';
+      
+      // 格式化日期
+      const date = new Date(release.created_at);
+      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+      
+      // 创建历史项目元素
+      const historyItem = document.createElement('div');
+      historyItem.className = 'bg-white rounded-xl overflow-hidden shadow-md card-hover';
+      historyItem.dataset.releaseId = release.id;
+      historyItem.dataset.repoFullName = release.repoFullName;
+      
+      historyItem.innerHTML = `
+        <div class="p-5">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="font-semibold text-lg">${release.name || asset.name}</h3>
+              <p class="text-sm text-gray-500">${release.repoFullName}</p>
+            </div>
+            <span class="px-2 py-1 text-xs font-medium bg-success/10 text-success rounded-full">已发布</span>
+          </div>
+          <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> ${formattedDate}</span>
+            <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> ${fileSize}</span>
+          </div>
+          <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
+            <div class="flex gap-2">
+              <button class="p-2 text-gray-500 hover:text-primary transition-colors download-asset" title="下载" data-url="${asset.browser_download_url}">
+                <i class="fa fa-download"></i>
+              </button>
+              <button class="p-2 text-gray-500 hover:text-primary transition-colors view-release" title="查看Release" data-url="${release.html_url}">
+                <i class="fa fa-external-link"></i>
+              </button>
+              <button class="p-2 text-gray-500 hover:text-primary transition-colors copy-link" title="复制链接" data-url="${asset.browser_download_url}">
+                <i class="fa fa-link"></i>
+              </button>
+            </div>
+            <button class="p-2 text-gray-500 hover:text-danger transition-colors delete-release" title="删除" data-repo="${release.repoFullName}" data-id="${release.id}">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // 添加事件监听器
+      historyItem.querySelector('.download-asset').addEventListener('click', (e) => {
+        const url = e.currentTarget.dataset.url;
+        window.open(url, '_blank');
+        showNotification('开始下载文件', 'info');
+      });
+      
+      historyItem.querySelector('.view-release').addEventListener('click', (e) => {
+        const url = e.currentTarget.dataset.url;
+        window.open(url, '_blank');
+      });
+      
+      historyItem.querySelector('.copy-link').addEventListener('click', (e) => {
+        const url = e.currentTarget.dataset.url;
+        navigator.clipboard.writeText(url)
+          .then(() => {
+            showNotification('文件链接已复制到剪贴板', 'success');
+          })
+          .catch(err => {
+            showNotification('无法复制链接，请手动复制', 'error');
+            console.error('复制失败: ', err);
+          });
+      });
+      
+      historyItem.querySelector('.delete-release').addEventListener('click', (e) => {
+        const repo = e.currentTarget.dataset.repo;
+        const id = e.currentTarget.dataset.id;
+        deleteRelease(repo, id, historyItem);
+      });
+      
+      // 添加到列表
+      historyList.appendChild(historyItem);
+    }
+    
+    // 加载更多历史记录
+    function loadMoreHistory() {
+      loadReleaseHistory(false);
+    }
+    
+    // 应用筛选条件
+    function applyFilters(reset = true) {
+      if (reset) {
+        historyList.innerHTML = '';
+      }
+      
+      // 获取筛选条件
+      const searchTerm = historySearch.value.trim().toLowerCase();
+      const repoFilter = historyFilter.value;
+      
+      // 应用筛选
+      const filteredReleases = allReleases.filter(release => {
+        // 仓库筛选
+        if (repoFilter && repoFilter !== 'all' && release.repoFullName !== repoFilter) {
+          return false;
+        }
+        
+        // 搜索筛选
+        if (searchTerm && 
+            !release.name?.toLowerCase().includes(searchTerm) && 
+            !release.assets[0]?.name.toLowerCase().includes(searchTerm)) {
+          return false;
+        }
+        
+        return true;
+      });
+      
+      // 更新列表
+      if (filteredReleases.length > 0) {
+        historyList.classList.remove('hidden');
+        noHistory.classList.add('hidden');
+        
+        // 添加筛选后的发布
+        filteredReleases.forEach(release => {
+          // 避免重复添加
+          if (!document.querySelector(`[data-release-id="${release.id}"][data-repo-full-name="${release.repoFullName}"]`)) {
+            addReleaseToHistoryList(release);
+          }
+        });
+      } else {
+        historyList.classList.add('hidden');
+        noHistory.classList.remove('hidden');
+      }
+    }
+    
+    // 删除Release
+    function deleteRelease(repoFullName, releaseId, element) {
+      if (!confirm('确定要删除这个Release吗？此操作不可恢复。')) {
+        return;
+      }
+      
+      const [owner, repo] = repoFullName.split('/');
+      
+      fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/${releaseId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `token ${accessToken}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('删除失败');
+        
+        // 从列表中移除元素
+        element.remove();
+        
+        // 从数组中移除
+        const index = allReleases.findIndex(r => r.id === parseInt(releaseId) && r.repoFullName === repoFullName);
+        if (index !== -1) {
+          allReleases.splice(index, 1);
+        }
+        
+        // 检查列表是否为空
+        if (historyList.children.length === 0) {
+          historyList.classList.add('hidden');
+          noHistory.classList.remove('hidden');
+        }
+        
+        showNotification('Release已成功删除', 'success');
+      })
+      .catch(error => {
+        showNotification('删除失败: ' + error.message, 'error');
+      });
+    }
+    
+    // 防抖函数
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
   </script>
 </body>
 </html>
