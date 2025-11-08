@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>登录中...</title>
+</head>
+<body>
+  <script>
+    // 从URL中获取授权码
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    
+    if (code) {
+      // 将授权码传递给主页面并跳转
+      window.location.href = `index.html?code=${code}`;
+    } else {
+      // 无授权码时直接跳回主页面
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
