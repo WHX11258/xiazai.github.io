@@ -263,6 +263,11 @@
       padding: 2rem;
       margin-bottom: 3rem;
       text-align: center;
+      transition: var(--transition);
+    }
+
+    .scan-section:hover {
+      box-shadow: var(--shadow-hover);
     }
 
     .scan-info {
@@ -286,6 +291,11 @@
       border-radius: 0.5rem;
       color: var(--dark);
       font-size: 0.95rem;
+      display: inline-block;
+    }
+
+    .scan-btn {
+      margin-top: 1rem;
     }
 
     /* 文件列表区域 */
@@ -303,6 +313,12 @@
       overflow: hidden;
       transition: var(--transition);
       border-top: 4px solid var(--primary);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .file-card:hover {
@@ -313,6 +329,9 @@
     .file-card-header {
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .file-title {
@@ -326,6 +345,15 @@
 
     .file-title i {
       color: var(--accent);
+    }
+
+    .file-badge {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 500;
     }
 
     .file-card-body {
@@ -365,6 +393,9 @@
     .url-value {
       color: var(--primary);
       text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
     }
 
     .url-value:hover {
@@ -383,6 +414,12 @@
     .file-action-btn {
       padding: 0.4rem 0.8rem;
       font-size: 0.85rem;
+      border-radius: 0.375rem;
+      transition: var(--transition);
+    }
+
+    .file-action-btn:hover {
+      background-color: var(--gray-light);
     }
 
     /* 空状态 */
@@ -392,6 +429,11 @@
       background-color: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .empty-state:hover {
+      box-shadow: var(--shadow-hover);
     }
 
     .empty-icon {
@@ -563,3 +605,285 @@
 
       .meta-label {
         flex: none;
+        margin-bottom: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="#" class="logo">
+          <i class="fa fa-cloud-download logo-icon"></i>
+          <div class="logo-text">网盘<span>资源管理器</span></div>
+        </a>
+        
+        <div class="nav-links">
+          <a href="#" class="nav-link">首页</a>
+          <a href="#resources" class="nav-link">资源列表</a>
+          <a href="#guide" class="nav-link">使用指南</a>
+        </div>
+        
+        <div class="nav-actions">
+          <button class="btn btn-outline" id="toggle-create-folder">
+            <i class="fa fa-plus"></i> 新建分类
+          </button>
+          <button class="btn btn-primary">
+            <i class="fa fa-github"></i> GitHub
+          </button>
+        </div>
+        
+        <button class="mobile-menu-btn">
+          <i class="fa fa-bars"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 英雄区域 -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">自动管理<span>网盘资源</span></h1>
+        <p class="hero-desc">通过GitHub仓库自动扫描网盘资源文件，一键生成包含名称、简介、下载链接和密码的资源列表</p>
+        <a href="https://github.com" target="_blank" class="github-badge">
+          <i class="fa fa-github"></i> 查看GitHub项目
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主内容区域 -->
+  <main class="main">
+    <div class="container">
+      <!-- 文件夹扫描区域 -->
+      <section class="scan-section">
+        <div class="scan-info">
+          <i class="fa fa-folder-open scan-icon"></i>
+          <span>扫描目标文件夹: <span class="folder-path">NetDisk_Resources/</span></span>
+        </div>
+        <button class="btn btn-primary scan-btn" id="scan-folder">
+          <i class="fa fa-refresh"></i> 扫描资源文件
+        </button>
+      </section>
+
+      <!-- 资源列表区域 -->
+      <section id="resources" class="section-header">
+        <h2 class="section-title">网盘资源列表</h2>
+        <p class="section-desc">以下是从GitHub仓库扫描到的所有网盘资源，包含完整的下载链接和访问密码</p>
+      </section>
+
+      <div class="files-grid" id="files-grid">
+        <!-- 文件卡片将通过JavaScript动态生成 -->
+        <div class="empty-state" id="empty-state">
+          <i class="fa fa-folder-open-o empty-icon"></i>
+          <h3 class="empty-title">暂无网盘资源</h3>
+          <p class="empty-desc">点击上方“扫描资源文件”按钮，或在GitHub仓库的NetDisk_Resources文件夹中添加资源文件</p>
+          <button class="btn btn-primary" id="scan-empty">
+            <i class="fa fa-refresh"></i> 扫描资源文件
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3>网盘资源管理器</h3>
+          <p class="text-gray-400">通过GitHub自动扫描和管理网盘资源，生成标准化的资源列表，提升资源共享效率</p>
+        </div>
+        
+        <div class="footer-col">
+          <h3>快速链接</h3>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="#">首页</a></li>
+            <li class="footer-link"><a href="#resources">资源列表</a></li>
+            <li class="footer-link"><a href="#guide">使用指南</a></li>
+            <li class="footer-link"><a href="https://github.com" target="_blank">GitHub仓库</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-col">
+          <h3>联系我们</h3>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="mailto:support@example.com"><i class="fa fa-envelope mr-2"></i> 联系支持</a></li>
+            <li class="footer-link"><a href="https://github.com/issues" target="_blank"><i class="fa fa-github mr-2"></i> 提交问题</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p><span class="copyright">©2025-9999 whx</span> - 保留所有权利</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 通知提示 -->
+  <div class="notification" id="notification">
+    <div class="notification-icon">
+      <i class="fa fa-check-circle"></i>
+    </div>
+    <div class="notification-message"></div>
+  </div>
+
+  <script>
+    // 模拟数据 - 实际使用时需从GitHub API获取
+    const mockFiles = [
+      {
+        id: 'file1',
+        name: 'Photoshop 2023 破解版',
+        category: '软件',
+        description: '包含完整安装包+破解工具，支持Win10/11系统，附详细安装教程',
+        url: 'https://pan.baidu.com/s/1abcdefg1234567890',
+        password: '7k9p',
+        createdAt: '2025-11-08'
+      },
+      {
+        id: 'file2',
+        name: 'Python基础入门教程',
+        category: '教程',
+        description: '零基础入门Python编程，包含视频、课件和练习代码',
+        url: 'https://pan.baidu.com/s/2defgabc4567890123',
+        password: '无',
+        createdAt: '2025-11-07'
+      },
+      {
+        id: 'file3',
+        name: '项目计划书模板',
+        category: '文档',
+        description: '包含IT项目、创业项目等多种类型的计划书模板，可直接编辑使用',
+        url: 'https://pan.baidu.com/s/3efgabcd5678901234',
+        password: 'x2d7',
+        createdAt: '2025-11-06'
+      }
+    ];
+
+    // DOM元素
+    const filesGrid = document.getElementById('files-grid');
+    const emptyState = document.getElementById('empty-state');
+    const scanBtn = document.getElementById('scan-folder');
+    const scanEmptyBtn = document.getElementById('scan-empty');
+    const notification = document.getElementById('notification');
+    const notificationMessage = notification.querySelector('.notification-message');
+
+    // 初始化页面
+    function init() {
+      // 模拟扫描文件
+      scanFiles();
+      
+      // 绑定事件
+      scanBtn.addEventListener('click', scanFiles);
+      scanEmptyBtn.addEventListener('click', scanFiles);
+    }
+
+    // 扫描文件并生成卡片
+    function scanFiles() {
+      // 显示加载状态（实际开发中可添加加载动画）
+      showNotification('正在扫描网盘资源文件...');
+      
+      // 模拟网络延迟
+      setTimeout(() => {
+        // 清空现有内容
+        filesGrid.innerHTML = '';
+        emptyState.style.display = 'none';
+        
+        // 生成文件卡片
+        if (mockFiles.length > 0) {
+          mockFiles.forEach(file => {
+            const fileCard = createFileCard(file);
+            filesGrid.appendChild(fileCard);
+          });
+        } else {
+          emptyState.style.display = 'block';
+        }
+        
+        showNotification('资源文件扫描完成，共找到 ' + mockFiles.length + ' 个网盘资源');
+      }, 1500);
+    }
+
+    // 创建文件卡片
+    function createFileCard(file) {
+      const fileCard = document.createElement('div');
+      fileCard.className = 'file-card';
+      fileCard.innerHTML = `
+        <div class="file-card-header">
+          <h3 class="file-title">
+            <i class="fa fa-file-text-o"></i>
+            ${file.name}
+          </h3>
+          <span class="file-badge">${file.category}</span>
+        </div>
+        <div class="file-card-body">
+          <div class="file-meta">
+            <div class="meta-item">
+              <span class="meta-label">简介:</span>
+              <span class="meta-value">${file.description}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">下载链接:</span>
+              <a href="${file.url}" class="meta-value url-value" target="_blank">
+                ${file.url}
+                <i class="fa fa-external-link"></i>
+              </a>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">访问密码:</span>
+              <span class="meta-value password-value">${file.password}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">更新时间:</span>
+              <span class="meta-value">${file.createdAt}</span>
+            </div>
+          </div>
+          <div class="file-actions">
+            <button class="file-action-btn btn-outline" onclick="copyToClipboard('${file.url}')">
+              <i class="fa fa-link"></i> 复制链接
+            </button>
+            <button class="file-action-btn btn-primary" onclick="copyToClipboard('${file.password}')">
+              <i class="fa fa-key"></i> 复制密码
+            </button>
+          </div>
+        </div>
+      `;
+      return fileCard;
+    }
+
+    // 复制到剪贴板（实际开发中需完善）
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification('已复制到剪贴板');
+      }).catch(err => {
+        showNotification('复制失败，请手动复制', 'error');
+        console.error('复制失败:', err);
+      });
+    }
+
+    // 显示通知
+    function showNotification(message, type = 'success') {
+      notificationMessage.textContent = message;
+      
+      if (type === 'success') {
+        notification.classList.add('notification-success');
+        notification.classList.remove('notification-error');
+      } else {
+        notification.classList.add('notification-error');
+        notification.classList.remove('notification-success');
+      }
+      
+      notification.classList.add('active');
+      
+      setTimeout(() => {
+        notification.classList.remove('active');
+      }, 3000);
+    }
+
+    // 初始化
+    init();
+  </script>
+</body>
+</html>
