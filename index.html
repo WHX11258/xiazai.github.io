@@ -3,39 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub文件管理系统</title>
+  <title>GitHub网盘资源管理器</title>
   <link rel="icon" href="https://github.com/WHX11258/ai6.github.io/blob/a76520f7cb0a03849866932ed89fb956ca48a290/images/favicon.ico?raw=true">
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary: #2eaadc;
-      --primary-dark: #1a85b3;
-      --primary-light: #e6f7ff;
-      --secondary: #28a745;
-      --secondary-dark: #218838;
-      --accent: #ffc107;
-      --danger: #dc3545;
-      --dark: #24292e;
-      --light: #f8fafc;
-      --gray: #6b7280;
-      --gray-light: #e5e7eb;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --radius: 0.5rem;
-      --transition: all 0.3s ease;
+      --primary: #4299e1;
+      --primary-light: #e8f4f8;
+      --secondary: #38b2ac;
+      --gray: #718096;
+      --gray-light: #f7fafc;
+      --gray-dark: #2d3748;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.07), 0 5px 10px rgba(0, 0, 0, 0.05);
+      --radius: 0.375rem;
+      --transition: all 0.2s ease;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
     body {
-      background-color: #f6f8fa;
-      color: var(--dark);
-      line-height: 1.6;
+      background-color: #fafafa;
+      color: var(--gray-dark);
+      line-height: 1.5;
     }
 
     .container {
@@ -45,11 +41,10 @@
       padding: 0 1rem;
     }
 
-    /* 导航栏样式 */
+    /* 导航栏 */
     header {
-      background-color: var(--dark);
-      color: white;
-      box-shadow: var(--shadow);
+      background-color: var(--white);
+      border-bottom: 1px solid #e2e8f0;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -65,23 +60,15 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
       text-decoration: none;
-      color: white;
-    }
-
-    .logo-icon {
-      color: white;
-      font-size: 1.8rem;
-    }
-
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .logo-text span {
       color: var(--primary);
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .logo i {
+      font-size: 1.5rem;
     }
 
     .nav-links {
@@ -90,31 +77,14 @@
     }
 
     .nav-link {
-      color: white;
+      color: var(--gray);
       text-decoration: none;
       font-weight: 500;
       transition: var(--transition);
-      padding: 0.5rem 0;
-      position: relative;
     }
 
     .nav-link:hover {
       color: var(--primary);
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--primary);
-      transition: var(--transition);
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
     }
 
     .nav-actions {
@@ -123,7 +93,7 @@
     }
 
     .btn {
-      padding: 0.5rem 1.25rem;
+      padding: 0.5rem 1rem;
       border-radius: var(--radius);
       font-weight: 500;
       cursor: pointer;
@@ -132,6 +102,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 0.9rem;
     }
 
     .btn-primary {
@@ -140,16 +111,7 @@
     }
 
     .btn-primary:hover {
-      background-color: var(--primary-dark);
-    }
-
-    .btn-secondary {
-      background-color: var(--secondary);
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--secondary-dark);
+      background-color: #3182ce;
     }
 
     .btn-outline {
@@ -166,144 +128,194 @@
       display: none;
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       cursor: pointer;
-      color: white;
+      color: var(--gray);
     }
 
-    /* 英雄区域样式 */
+    /* 英雄区域 */
     .hero {
       padding: 4rem 0;
-      background: linear-gradient(135deg, var(--dark) 0%, #3a3f44 100%);
-      margin-bottom: 3rem;
-      color: white;
-    }
-
-    .hero-content {
       text-align: center;
-      max-width: 800px;
-      margin: 0 auto;
+      margin-bottom: 3rem;
     }
 
     .hero-title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-title span {
-      color: var(--primary);
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--gray-dark);
     }
 
     .hero-desc {
       font-size: 1.1rem;
-      opacity: 0.9;
-      margin-bottom: 2rem;
+      color: var(--gray);
       max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto 2rem;
     }
 
     .github-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background-color: #2ea44f;
-      color: white;
+      background-color: #f8f9fa;
+      color: #24292e;
       padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-weight: 600;
+      border-radius: var(--radius);
+      font-weight: 500;
       text-decoration: none;
       margin-top: 1rem;
+      border: 1px solid #e1e4e8;
       transition: var(--transition);
     }
 
     .github-badge:hover {
-      background-color: #238636;
-      transform: translateY(-2px);
+      background-color: #f3f4f6;
     }
 
-    /* 主内容区域 */
+    /* 主内容 */
     .main {
-      padding: 2rem 0 5rem;
+      padding: 2rem 0 6rem;
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+      text-align: center;
     }
 
     .section-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      position: relative;
-      display: inline-block;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--gray-dark);
     }
 
-    .section-title::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -5px;
-      width: 60px;
-      height: 3px;
-      background-color: var(--primary);
-      border-radius: 3px;
+    .section-desc {
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .workflow-section {
-      background-color: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .workflow-steps {
+    /* 流程步骤 */
+    .workflow {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
     }
 
     .workflow-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      background-color: var(--white);
       padding: 1.5rem;
       border-radius: var(--radius);
-      background-color: var(--light);
+      box-shadow: var(--shadow);
+      text-align: center;
       transition: var(--transition);
     }
 
     .workflow-step:hover {
       transform: translateY(-5px);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-hover);
     }
 
-    .step-number {
-      width: 40px;
-      height: 40px;
+    .step-icon {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background-color: var(--primary);
-      color: white;
+      background-color: var(--primary-light);
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      margin: 0 auto 1rem;
     }
 
     .step-title {
       font-weight: 600;
       margin-bottom: 0.5rem;
-      color: var(--dark);
+      color: var(--gray-dark);
     }
 
     .step-desc {
       color: var(--gray);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
-    /* 文件夹区域 */
-    .folders-container {
+    /* 卡片通用样式 */
+    .card {
+      background-color: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--gray-dark);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* 表单样式 */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-dark);
+      font-size: 0.9rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e0;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    /* 文件夹列表 */
+    .folders-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
@@ -311,43 +323,15 @@
     }
 
     .folder-card {
-      background-color: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1.5rem;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .folder-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .folder-header {
       display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      flex-direction: column;
+      height: 100%;
     }
 
-    .folder-icon {
-      width: 50px;
-      height: 50px;
-      background-color: var(--primary-light);
-      border-radius: 8px;
+    .folder-card-body {
+      flex: 1;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-      font-size: 1.5rem;
-    }
-
-    .folder-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 0;
+      flex-direction: column;
     }
 
     .folder-meta {
@@ -359,20 +343,18 @@
     }
 
     .folder-desc {
-      color: var(--dark);
-      opacity: 0.8;
-      font-size: 0.95rem;
+      color: var(--gray);
+      font-size: 0.9rem;
       margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--gray-light);
+      flex: 1;
     }
 
-    .folder-files-count {
+    .folder-stats {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.5rem;
       color: var(--primary);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       margin-bottom: 1rem;
     }
 
@@ -381,155 +363,41 @@
       gap: 0.5rem;
     }
 
-    .folder-action-btn {
+    .folder-btn {
       flex: 1;
-      padding: 0.4rem;
-      font-size: 0.9rem;
+      padding: 0.5rem;
+      font-size: 0.85rem;
       text-align: center;
     }
 
-    /* 创建文件夹表单 */
-    .create-folder-form {
-      background-color: white;
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      background-color: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 2rem;
-      margin-bottom: 3rem;
     }
 
-    .form-title {
-      font-size: 1.3rem;
+    .empty-icon {
+      font-size: 3rem;
+      color: #e2e8f0;
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
       font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: var(--dark);
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-label {
-      display: block;
       margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--dark);
+      color: var(--gray-dark);
     }
 
-    .form-input,
-    .form-textarea,
-    .form-select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--gray-light);
-      border-radius: var(--radius);
-      font-size: 1rem;
-      transition: var(--transition);
-    }
-
-    .form-input:focus,
-    .form-textarea:focus,
-    .form-select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(46, 170, 220, 0.1);
-    }
-
-    .form-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    /* 文件列表样式 */
-    .files-container {
-      background-color: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 3rem;
-    }
-
-    .files-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--gray-light);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .files-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .file-item {
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid var(--gray-light);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: var(--transition);
-    }
-
-    .file-item:hover {
-      background-color: var(--primary-light);
-    }
-
-    .file-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .file-icon {
-      color: var(--accent);
-      font-size: 1.5rem;
-    }
-
-    .file-details h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0 0 0.2rem 0;
-    }
-
-    .file-meta {
-      font-size: 0.85rem;
+    .empty-desc {
       color: var(--gray);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
     }
 
-    .file-actions {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .file-action-btn {
-      background: none;
-      border: none;
-      color: var(--gray);
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 1rem;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .file-action-btn:hover {
-      background-color: var(--primary-light);
-      color: var(--primary);
-    }
-
-    /* 模态框样式 */
+    /* 模态框 */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -552,10 +420,10 @@
     }
 
     .modal {
-      background-color: white;
+      background-color: var(--white);
       border-radius: var(--radius);
       width: 100%;
-      max-width: 500px;
+      max-width: 550px;
       max-height: 90vh;
       overflow-y: auto;
       transform: translateY(20px);
@@ -567,30 +435,30 @@
     }
 
     .modal-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--gray-light);
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .modal-title {
-      font-size: 1.2rem;
       font-weight: 600;
-      margin: 0;
+      font-size: 1.1rem;
+      color: var(--gray-dark);
     }
 
     .modal-close {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       cursor: pointer;
       color: var(--gray);
       transition: var(--transition);
     }
 
     .modal-close:hover {
-      color: var(--danger);
+      color: #e53e3e;
     }
 
     .modal-body {
@@ -599,76 +467,92 @@
 
     .modal-footer {
       padding: 1rem 1.5rem;
-      border-top: 1px solid var(--gray-light);
+      border-top: 1px solid #e2e8f0;
       display: flex;
       justify-content: flex-end;
       gap: 1rem;
     }
 
-    /* 通知样式 */
-    .notification {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 1rem 1.5rem;
-      border-radius: var(--radius);
-      background-color: white;
-      box-shadow: var(--shadow-lg);
+    /* 文件列表 */
+    .file-list {
+      margin-top: 1rem;
+    }
+
+    .file-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f7fafc;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      z-index: 1000;
-      transform: translateX(120%);
-      transition: transform 0.3s ease;
+      justify-content: space-between;
     }
 
-    .notification.active {
-      transform: translateX(0);
+    .file-item:last-child {
+      border-bottom: none;
     }
 
-    .notification-success {
-      border-left: 4px solid var(--secondary);
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
 
-    .notification-error {
-      border-left: 4px solid var(--danger);
-    }
-
-    .notification-icon {
+    .file-icon {
+      color: var(--secondary);
       font-size: 1.25rem;
     }
 
-    .notification-success .notification-icon {
-      color: var(--secondary);
+    .file-details h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      color: var(--gray-dark);
     }
 
-    .notification-error .notification-icon {
-      color: var(--danger);
+    .file-meta {
+      font-size: 0.8rem;
+      color: var(--gray);
     }
 
-    .notification-message {
-      font-weight: 500;
+    .file-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .file-action-btn {
+      background: none;
+      border: none;
+      color: var(--gray);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+      padding: 0.25rem;
+    }
+
+    .file-action-btn:hover {
+      color: var(--primary);
     }
 
     /* 文件信息样式 */
-    .file-info-grid {
+    .info-grid {
       display: grid;
       grid-template-columns: 1fr 2fr;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
 
-    .file-info-label {
+    .info-label {
       font-weight: 500;
       color: var(--gray);
+      font-size: 0.9rem;
     }
 
-    .file-info-value {
-      font-weight: 500;
+    .info-value {
+      font-size: 0.95rem;
+      color: var(--gray-dark);
     }
 
-    .password-display {
-      background-color: var(--light);
+    .password-box {
+      background-color: var(--gray-light);
       padding: 0.75rem;
       border-radius: var(--radius);
       display: flex;
@@ -679,12 +563,12 @@
     .password-text {
       flex: 1;
       font-family: monospace;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .copy-btn {
       background: none;
-      border: 1px solid var(--gray-light);
+      border: 1px solid #cbd5e0;
       border-radius: var(--radius);
       padding: 0.25rem 0.75rem;
       cursor: pointer;
@@ -695,1013 +579,4 @@
     .copy-btn:hover {
       background-color: var(--primary-light);
       border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    /* 页脚样式 */
-    footer {
-      background-color: var(--dark);
-      color: white;
-      padding: 3rem 0 1.5rem;
-      margin-top: 5rem;
-    }
-
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .footer-col h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      position: relative;
-      padding-bottom: 0.5rem;
-    }
-
-    .footer-col h3::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 40px;
-      height: 2px;
-      background-color: var(--primary);
-    }
-
-    .footer-links {
-      list-style: none;
-    }
-
-    .footer-link {
-      margin-bottom: 0.75rem;
-    }
-
-    .footer-link a {
-      color: var(--gray);
-      text-decoration: none;
-      transition: var(--transition);
-    }
-
-    .footer-link a:hover {
-      color: var(--primary);
-      padding-left: 5px;
-    }
-
-    .footer-bottom {
-      text-align: center;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-
-    .copyright {
-      color: white;
-      font-weight: 500;
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 768px) {
-      .nav-links,
-      .nav-actions {
-        display: none;
-      }
-
-      .mobile-menu-btn {
-        display: block;
-      }
-
-      .hero-title {
-        font-size: 2rem;
-      }
-
-      .file-info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .folder-actions {
-        flex-direction: column;
-      }
-
-      .workflow-steps {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* 动画效果 */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.5s ease forwards;
-    }
-
-    /* 加载状态 */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <!-- 导航栏 -->
-  <header>
-    <div class="container">
-      <nav class="navbar">
-        <a href="#" class="logo">
-          <i class="fa fa-github logo-icon"></i>
-          <div class="logo-text">GitHub<span>文件管理</span></div>
-        </a>
-        
-        <div class="nav-links">
-          <a href="#" class="nav-link">首页</a>
-          <a href="#folders" class="nav-link">我的文件夹</a>
-          <a href="#workflow" class="nav-link">操作流程</a>
-          <a href="#help" class="nav-link">使用帮助</a>
-        </div>
-        
-        <div class="nav-actions">
-          <button class="btn btn-outline" id="toggle-create-folder">
-            <i class="fa fa-plus"></i> 新建文件夹
-          </button>
-          <button class="btn btn-primary" id="github-link">
-            <i class="fa fa-github"></i> GitHub
-          </button>
-        </div>
-        
-        <button class="mobile-menu-btn">
-          <i class="fa fa-bars"></i>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- 英雄区域 -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="hero-title">GitHub文件管理，<span>高效组织</span>网盘资源</h1>
-        <p class="hero-desc">通过GitHub管理你的网盘资源，自动生成包含网盘链接、访问密码、文件名称和简介的格式化文件，让资源共享更便捷</p>
-        <button class="btn btn-primary" id="hero-create-btn">
-          <i class="fa fa-folder"></i> 立即创建文件夹
-        </button>
-        <a href="https://github.com" target="_blank" class="github-badge">
-          <i class="fa fa-github"></i> 查看GitHub项目
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 主内容区域 -->
-  <main class="main">
-    <div class="container">
-      <!-- 操作流程说明 -->
-      <section id="workflow" class="workflow-section">
-        <h2 class="section-title">GitHub操作流程</h2>
-        <div class="workflow-steps">
-          <div class="workflow-step">
-            <div class="step-number">1</div>
-            <h3 class="step-title">创建文件夹</h3>
-            <p class="step-desc">在系统中创建文件夹，用于组织相关的网盘资源</p>
-          </div>
-          <div class="workflow-step">
-            <div class="step-number">2</div>
-            <h3 class="step-title">添加网盘资源</h3>
-            <p class="step-desc">输入网盘链接、访问密码、文件名称和简介</p>
-          </div>
-          <div class="workflow-step">
-            <div class="step-number">3</div>
-            <h3 class="step-title">生成格式文件</h3>
-            <p class="step-desc">系统自动生成包含所有信息的格式化文件</p>
-          </div>
-          <div class="workflow-step">
-            <div class="step-number">4</div>
-            <h3 class="step-title">上传到GitHub</h3>
-            <p class="step-desc">将生成的文件上传到GitHub仓库进行版本管理</p>
-          </div>
-        </div>
-      </section>
-      
-      <!-- 创建文件夹表单 -->
-      <div class="create-folder-form" id="create-folder-form" style="display: none;">
-        <h3 class="form-title">创建新文件夹</h3>
-        <form id="folder-form">
-          <div class="form-group">
-            <label for="folder-name" class="form-label">文件夹名称</label>
-            <input type="text" id="folder-name" class="form-input" placeholder="输入文件夹名称（建议与GitHub仓库名一致）" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="folder-desc" class="form-label">文件夹描述</label>
-            <textarea id="folder-desc" class="form-textarea" placeholder="描述这个文件夹的用途或包含的网盘资源"></textarea>
-          </div>
-          
-          <div class="form-group">
-            <label for="github-repo" class="form-label">GitHub仓库地址（可选）</label>
-            <input type="text" id="github-repo" class="form-input" placeholder="例如：https://github.com/用户名/仓库名">
-          </div>
-          
-          <div class="form-group">
-            <label for="file-format" class="form-label">生成文件格式</label>
-            <select id="file-format" class="form-select" required>
-              <option value="">选择文件格式</option>
-              <option value="txt">TXT (文本文件)</option>
-              <option value="csv">CSV (逗号分隔值)</option>
-              <option value="json">JSON (数据交换格式)</option>
-              <option value="xml">XML (可扩展标记语言)</option>
-            </select>
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" class="btn btn-outline" id="cancel-create">取消</button>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa fa-check"></i> 创建文件夹
-            </button>
-          </div>
-        </form>
-      </div>
-      
-      <!-- 文件夹列表 -->
-      <section id="folders">
-        <h2 class="section-title">我的文件夹</h2>
-        <div class="folders-container" id="folders-container">
-          <!-- 文件夹卡片将通过JavaScript动态生成 -->
-        </div>
-        
-        <!-- 空状态提示 -->
-        <div id="empty-folders" class="text-center py-10 bg-white rounded-lg shadow">
-          <i class="fa fa-folder-open-o text-5xl text-gray-300 mb-4"></i>
-          <h3 class="text-xl font-medium mb-2">还没有文件夹</h3>
-          <p class="text-gray-500 mb-4">点击下方按钮创建你的第一个文件夹，开始管理网盘资源</p>
-          <button class="btn btn-primary" id="empty-create-btn">
-            <i class="fa fa-plus"></i> 创建文件夹
-          </button>
-        </div>
-      </section>
-      
-      <!-- 文件列表模态框 -->
-      <div class="modal-overlay" id="folder-files-modal">
-        <div class="modal">
-          <div class="modal-header">
-            <h3 class="modal-title" id="modal-folder-title">文件夹文件</h3>
-            <button class="modal-close" id="close-files-modal">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label class="form-label">添加网盘资源到文件夹</label>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
-                <input type="text" id="new-file-name" class="form-input" placeholder="文件名称">
-                <input type="text" id="new-file-url" class="form-input" placeholder="网盘链接">
-                <input type="text" id="new-file-password" class="form-input" placeholder="访问密码">
-              </div>
-              <textarea id="new-file-desc" class="form-textarea" placeholder="文件简介（可选）"></textarea>
-              <button class="btn btn-secondary mt-2" id="add-file-btn">
-                <i class="fa fa-plus"></i> 添加资源
-              </button>
-            </div>
-            
-            <div class="files-container">
-              <div class="files-header">
-                <h4 class="files-title">网盘资源列表</h4>
-                <button class="btn btn-primary btn-sm" id="generate-files-btn">
-                  <i class="fa fa-magic"></i> 生成格式文件
-                </button>
-              </div>
-              <div id="folder-files-list">
-                <!-- 文件项将通过JavaScript动态生成 -->
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-outline" id="close-files-modal-footer">关闭</button>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 文件信息模态框 -->
-      <div class="modal-overlay" id="file-info-modal">
-        <div class="modal">
-          <div class="modal-header">
-            <h3 class="modal-title">网盘资源信息</h3>
-            <button class="modal-close" id="close-file-info-modal">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="file-info-grid">
-              <div class="file-info-label">文件名称:</div>
-              <div class="file-info-value" id="info-file-name"></div>
-              
-              <div class="file-info-label">网盘链接:</div>
-              <div class="file-info-value" id="info-file-url"></div>
-              
-              <div class="file-info-label">访问密码:</div>
-              <div class="password-display">
-                <span class="password-text" id="info-file-password"></span>
-                <button class="copy-btn" id="copy-password">复制</button>
-              </div>
-              
-              <div class="file-info-label">文件格式:</div>
-              <div class="file-info-value" id="info-file-format"></div>
-              
-              <div class="file-info-label">文件简介:</div>
-              <div class="file-info-value" id="info-file-desc"></div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" id="download-file-btn">
-              <i class="fa fa-download"></i> 下载文件
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- 通知提示 -->
-  <div class="notification" id="notification">
-    <div class="notification-icon">
-      <i class="fa fa-check-circle"></i>
-    </div>
-    <div class="notification-message"></div>
-  </div>
-
-  <!-- 页脚 -->
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-col">
-          <h3>GitHub文件管理</h3>
-          <p class="text-gray-400">通过GitHub管理网盘资源，自动生成包含链接、访问密码等信息的格式化文件，提升资源管理效率。</p>
-        </div>
-        
-        <div class="footer-col">
-          <h3>快速链接</h3>
-          <ul class="footer-links">
-            <li class="footer-link"><a href="#">首页</a></li>
-            <li class="footer-link"><a href="#folders">我的文件夹</a></li>
-            <li class="footer-link"><a href="#workflow">操作流程</a></li>
-            <li class="footer-link"><a href="#help">使用帮助</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-col">
-          <h3>GitHub资源</h3>
-          <ul class="footer-links">
-            <li class="footer-link"><a href="https://github.com" target="_blank"><i class="fa fa-github mr-2"></i> GitHub官网</a></li>
-            <li class="footer-link"><a href="https://guides.github.com" target="_blank"><i class="fa fa-book mr-2"></i> GitHub指南</a></li>
-            <li class="footer-link"><a href="https://github.com/WHX11258" target="_blank"><i class="fa fa-user mr-2"></i> 开发者主页</a></li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="footer-bottom">
-        <p><span class="copyright">©2025-9999 whx</span> - 保留所有权利</p>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // 全局状态
-    const state = {
-      folders: [],
-      currentFolderId: null,
-      currentFileInfo: null
-    };
-
-    // DOM元素
-    const createFolderForm = document.getElementById('create-folder-form');
-    const toggleCreateFolderBtn = document.getElementById('toggle-create-folder');
-    const heroCreateBtn = document.getElementById('hero-create-btn');
-    const emptyCreateBtn = document.getElementById('empty-create-btn');
-    const cancelCreateBtn = document.getElementById('cancel-create');
-    const folderForm = document.getElementById('folder-form');
-    const foldersContainer = document.getElementById('folders-container');
-    const emptyFolders = document.getElementById('empty-folders');
-    const folderFilesModal = document.getElementById('folder-files-modal');
-    const modalFolderTitle = document.getElementById('modal-folder-title');
-    const closeFilesModal = document.getElementById('close-files-modal');
-    const closeFilesModalFooter = document.getElementById('close-files-modal-footer');
-    const addFileBtn = document.getElementById('add-file-btn');
-    const newFileName = document.getElementById('new-file-name');
-    const newFileUrl = document.getElementById('new-file-url');
-    const newFilePassword = document.getElementById('new-file-password');
-    const newFileDesc = document.getElementById('new-file-desc');
-    const folderFilesList = document.getElementById('folder-files-list');
-    const generateFilesBtn = document.getElementById('generate-files-btn');
-    const fileInfoModal = document.getElementById('file-info-modal');
-    const closeFileInfoModal = document.getElementById('close-file-info-modal');
-    const infoFileName = document.getElementById('info-file-name');
-    const infoFileUrl = document.getElementById('info-file-url');
-    const infoFilePassword = document.getElementById('info-file-password');
-    const infoFileFormat = document.getElementById('info-file-format');
-    const infoFileDesc = document.getElementById('info-file-desc');
-    const copyPasswordBtn = document.getElementById('copy-password');
-    const downloadFileBtn = document.getElementById('download-file-btn');
-    const notification = document.getElementById('notification');
-    const notificationIcon = notification.querySelector('.notification-icon');
-    const notificationMessage = notification.querySelector('.notification-message');
-    const githubLink = document.getElementById('github-link');
-
-    // 初始化
-    function init() {
-      // 从本地存储加载文件夹
-      loadFoldersFromStorage();
-      // 更新文件夹UI
-      updateFoldersUI();
-      // 绑定事件监听
-      bindEvents();
-    }
-
-    // 从本地存储加载文件夹
-    function loadFoldersFromStorage() {
-      const savedFolders = localStorage.getItem('githubFileManagerFolders');
-      if (savedFolders) {
-        state.folders = JSON.parse(savedFolders);
-      } else {
-        state.folders = [];
-      }
-    }
-
-    // 保存文件夹到本地存储
-    function saveFoldersToStorage() {
-      localStorage.setItem('githubFileManagerFolders', JSON.stringify(state.folders));
-    }
-
-    // 更新文件夹UI
-    function updateFoldersUI() {
-      if (state.folders.length === 0) {
-        foldersContainer.style.display = 'none';
-        emptyFolders.style.display = 'block';
-      } else {
-        foldersContainer.style.display = 'grid';
-        emptyFolders.style.display = 'none';
-        
-        // 清空容器
-        foldersContainer.innerHTML = '';
-        
-        // 添加文件夹卡片
-        state.folders.forEach(folder => {
-          const folderCard = createFolderCard(folder);
-          foldersContainer.appendChild(folderCard);
-        });
-      }
-    }
-
-    // 创建文件夹卡片
-    function createFolderCard(folder) {
-      const card = document.createElement('div');
-      card.className = 'folder-card fade-in';
-      card.dataset.id = folder.id;
-      
-      // 计算文件数量
-      const fileCount = folder.files ? folder.files.length : 0;
-      
-      // 格式化日期
-      const formattedDate = new Date(folder.createdAt).toLocaleDateString();
-      
-      // GitHub仓库链接
-      const repoLink = folder.githubRepo ? 
-        `<a href="${folder.githubRepo}" target="_blank" class="text-primary hover:underline text-sm">
-          <i class="fa fa-github"></i> 查看仓库
-        </a>` : '';
-      
-      card.innerHTML = `
-        <div class="folder-header">
-          <div class="folder-icon">
-            <i class="fa fa-folder"></i>
-          </div>
-          <h3 class="folder-title">${folder.name}</h3>
-        </div>
-        <div class="folder-meta">
-          <span>创建于 ${formattedDate}</span>
-          <span>${getFormatName(folder.format)}</span>
-        </div>
-        <p class="folder-desc">${folder.description || '无描述'}</p>
-        ${repoLink}
-        <div class="folder-files-count">
-          <i class="fa fa-file-o"></i>
-          <span>包含 ${fileCount} 个网盘资源</span>
-        </div>
-        <div class="folder-actions">
-          <button class="btn btn-outline folder-view-btn" data-id="${folder.id}">
-            <i class="fa fa-eye"></i> 查看资源
-          </button>
-          <button class="btn btn-primary folder-generate-btn" data-id="${folder.id}">
-            <i class="fa fa-magic"></i> 生成文件
-          </button>
-        </div>
-      `;
-      
-      // 添加事件监听
-      card.querySelector('.folder-view-btn').addEventListener('click', () => {
-        openFolderFilesModal(folder.id);
-      });
-      
-      card.querySelector('.folder-generate-btn').addEventListener('click', () => {
-        generateFolderFiles(folder.id);
-      });
-      
-      return card;
-    }
-
-    // 获取格式名称
-    function getFormatName(format) {
-      const formats = {
-        'txt': 'TXT格式',
-        'csv': 'CSV格式',
-        'json': 'JSON格式',
-        'xml': 'XML格式'
-      };
-      return formats[format] || format;
-    }
-
-    // 打开文件夹文件模态框
-    function openFolderFilesModal(folderId) {
-      const folder = state.folders.find(f => f.id === folderId);
-      if (!folder) return;
-      
-      state.currentFolderId = folderId;
-      modalFolderTitle.textContent = `${folder.name} 的网盘资源`;
-      
-      // 清空文件列表
-      folderFilesList.innerHTML = '';
-      
-      // 添加文件
-      if (folder.files && folder.files.length > 0) {
-        folder.files.forEach(file => {
-          addFileItem(file);
-        });
-      } else {
-        // 显示空状态
-        folderFilesList.innerHTML = `
-          <div class="file-item">
-            <div class="file-info">
-              <div class="file-icon">
-                <i class="fa fa-info-circle"></i>
-              </div>
-              <div class="file-details">
-                <h4>暂无网盘资源</h4>
-                <div class="file-meta">添加资源到这个文件夹</div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      // 显示模态框
-      folderFilesModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    // 添加文件项
-    function addFileItem(file) {
-      const fileItem = document.createElement('div');
-      fileItem.className = 'file-item';
-      fileItem.dataset.id = file.id;
-      
-      // 截断长链接显示
-      let displayUrl = file.url;
-      if (displayUrl.length > 40) {
-        displayUrl = displayUrl.substring(0, 40) + '...';
-      }
-      
-      fileItem.innerHTML = `
-        <div class="file-info">
-          <div class="file-icon">
-            <i class="fa fa-cloud-download"></i>
-          </div>
-          <div class="file-details">
-            <h4>${file.name}</h4>
-            <div class="file-meta">${displayUrl} <span class="text-primary">${file.password ? '[有密码]' : ''}</span></div>
-          </div>
-        </div>
-        <div class="file-actions">
-          <button class="file-action-btn view-file-info" data-id="${file.id}" title="查看信息">
-            <i class="fa fa-info-circle"></i>
-          </button>
-          <button class="file-action-btn delete-file" data-id="${file.id}" title="删除">
-            <i class="fa fa-trash"></i>
-          </button>
-        </div>
-      `;
-      
-      // 添加事件监听
-      fileItem.querySelector('.view-file-info').addEventListener('click', () => {
-        viewFileInfo(file.id);
-      });
-      
-      fileItem.querySelector('.delete-file').addEventListener('click', () => {
-        deleteFile(file.id);
-      });
-      
-      folderFilesList.appendChild(fileItem);
-    }
-
-    // 查看文件信息
-    function viewFileInfo(fileId) {
-      const folder = state.folders.find(f => f.id === state.currentFolderId);
-      if (!folder || !folder.files) return;
-      
-      const file = folder.files.find(f => f.id === fileId);
-      if (!file) return;
-      
-      state.currentFileInfo = file;
-      
-      // 更新信息
-      infoFileName.textContent = file.name;
-      infoFileUrl.textContent = file.url;
-      infoFilePassword.textContent = file.password || '无密码';
-      infoFileFormat.textContent = getFormatName(folder.format);
-      infoFileDesc.textContent = file.description || '无描述';
-      
-      // 显示模态框
-      fileInfoModal.classList.add('active');
-    }
-
-    // 删除文件
-    function deleteFile(fileId) {
-      const folderIndex = state.folders.findIndex(f => f.id === state.currentFolderId);
-      if (folderIndex === -1 || !state.folders[folderIndex].files) return;
-      
-      // 过滤掉要删除的文件
-      state.folders[folderIndex].files = state.folders[folderIndex].files.filter(
-        file => file.id !== fileId
-      );
-      
-      // 保存并更新UI
-      saveFoldersToStorage();
-      
-      // 重新加载文件列表
-      openFolderFilesModal(state.currentFolderId);
-      
-      // 显示通知
-      showNotification('网盘资源已删除', 'success');
-    }
-
-    // 生成文件夹文件
-    function generateFolderFiles(folderId) {
-      const folder = state.folders.find(f => f.id === folderId);
-      if (!folder) return;
-      
-      if (!folder.files || folder.files.length === 0) {
-        showNotification('请先添加网盘资源到文件夹', 'error');
-        return;
-      }
-      
-      // 根据格式生成文件内容
-      let content = '';
-      let fileName = `${folder.name}.${folder.format}`;
-      
-      switch (folder.format) {
-        case 'txt':
-          content += `# ${folder.name} 网盘资源列表\n`;
-          content += `# 创建时间: ${new Date().toLocaleString()}\n`;
-          if (folder.githubRepo) content += `# GitHub仓库: ${folder.githubRepo}\n`;
-          content += '\n';
-          
-          folder.files.forEach((file, index) => {
-            content += `## 资源 ${index + 1}: ${file.name}\n`;
-            content += `下载地址: ${file.url}\n`;
-            content += `访问密码: ${file.password || '无'}\n`;
-            content += `资源简介: ${file.description || '无'}\n\n`;
-          });
-          break;
-          
-        case 'csv':
-          content = '序号,文件名称,网盘链接,访问密码,资源简介\n';
-          folder.files.forEach((file, index) => {
-            content += `${index + 1},"${escapeCsv(file.name)}","${escapeCsv(file.url)}","${escapeCsv(file.password || '')}","${escapeCsv(file.description || '')}"\n`;
-          });
-          break;
-          
-        case 'json':
-          const jsonData = {
-            folderName: folder.name,
-            createdAt: new Date().toISOString(),
-            githubRepo: folder.githubRepo || '',
-            resources: folder.files.map((file, index) => ({
-              id: index + 1,
-              name: file.name,
-              url: file.url,
-              password: file.password || '',
-              description: file.description || ''
-            }))
-          };
-          content = JSON.stringify(jsonData, null, 2);
-          break;
-          
-        case 'xml':
-          content = '<?xml version="1.0" encoding="UTF-8"?>\n';
-          content += `<folder name="${folder.name}" created="${new Date().toISOString()}" githubRepo="${escapeXml(folder.githubRepo || '')}">\n`;
-          folder.files.forEach((file, index) => {
-            content += '  <resource id="' + (index + 1) + '">\n';
-            content += `    <name>${escapeXml(file.name)}</name>\n`;
-            content += `    <url>${escapeXml(file.url)}</url>\n`;
-            content += `    <password>${escapeXml(file.password || '')}</password>\n`;
-            content += `    <description>${escapeXml(file.description || '')}</description>\n`;
-            content += '  </resource>\n';
-          });
-          content += '</folder>';
-          break;
-      }
-      
-      // 下载生成的文件
-      downloadTextFile(content, fileName);
-      
-      // 显示通知
-      showNotification(`已生成${getFormatName(folder.format)}文件，可上传到GitHub`, 'success');
-    }
-
-    // 转义CSV内容
-    function escapeCsv(text) {
-      if (!text) return '';
-      return text.replace(/"/g, '""');
-    }
-
-    // 转义XML内容
-    function escapeXml(unsafe) {
-      if (!unsafe) return '';
-      return unsafe.replace(/[<>&'"]/g, function(c) {
-        switch (c) {
-          case '<': return '&lt;';
-          case '>': return '&gt;';
-          case '&': return '&amp;';
-          case '\'': return '&apos;';
-          case '"': return '&quot;';
-        }
-      });
-    }
-
-    // 下载文本文件
-    function downloadTextFile(content, fileName) {
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      
-      // 清理
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 0);
-    }
-
-    // 显示通知
-    function showNotification(message, type = 'success') {
-      // 设置消息
-      notificationMessage.textContent = message;
-      
-      // 设置类型样式
-      notification.className = 'notification';
-      notificationIcon.className = 'notification-icon';
-      
-      if (type === 'success') {
-        notification.classList.add('notification-success');
-        notificationIcon.innerHTML = '<i class="fa fa-check-circle"></i>';
-      } else if (type === 'error') {
-        notification.classList.add('notification-error');
-        notificationIcon.innerHTML = '<i class="fa fa-exclamation-circle"></i>';
-      }
-      
-      // 显示通知
-      notification.classList.add('active');
-      
-      // 3秒后隐藏
-      setTimeout(() => {
-        notification.classList.remove('active');
-      }, 3000);
-    }
-
-    // 绑定事件监听
-    function bindEvents() {
-      // 显示创建文件夹表单
-      toggleCreateFolderBtn.addEventListener('click', () => {
-        createFolderForm.style.display = 'block';
-        // 滚动到表单位置
-        createFolderForm.scrollIntoView({ behavior: 'smooth' });
-      });
-      
-      heroCreateBtn.addEventListener('click', () => {
-        createFolderForm.style.display = 'block';
-        createFolderForm.scrollIntoView({ behavior: 'smooth' });
-      });
-      
-      emptyCreateBtn.addEventListener('click', () => {
-        createFolderForm.style.display = 'block';
-        createFolderForm.scrollIntoView({ behavior: 'smooth' });
-      });
-      
-      // 取消创建文件夹
-      cancelCreateBtn.addEventListener('click', () => {
-        folderForm.reset();
-        createFolderForm.style.display = 'none';
-      });
-      
-      // 提交创建文件夹表单
-      folderForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const folderName = document.getElementById('folder-name').value.trim();
-        const folderDesc = document.getElementById('folder-desc').value.trim();
-        const githubRepo = document.getElementById('github-repo').value.trim();
-        const fileFormat = document.getElementById('file-format').value;
-        
-        if (!folderName || !fileFormat) return;
-        
-        // 创建新文件夹
-        const newFolder = {
-          id: 'folder-' + Date.now(),
-          name: folderName,
-          description: folderDesc,
-          githubRepo: githubRepo,
-          format: fileFormat,
-          createdAt: new Date().toISOString(),
-          files: []
-        };
-        
-        // 添加到状态
-        state.folders.push(newFolder);
-        
-        // 保存并更新UI
-        saveFoldersToStorage();
-        updateFoldersUI();
-        
-        // 重置表单并隐藏
-        folderForm.reset();
-        createFolderForm.style.display = 'none';
-        
-        // 显示通知
-        showNotification('文件夹创建成功', 'success');
-      });
-      
-      // 关闭文件列表模态框
-      closeFilesModal.addEventListener('click', () => {
-        folderFilesModal.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-      
-      closeFilesModalFooter.addEventListener('click', () => {
-        folderFilesModal.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-      
-      // 添加文件
-      addFileBtn.addEventListener('click', () => {
-        const fileName = newFileName.value.trim();
-        const fileUrl = newFileUrl.value.trim();
-        const filePassword = newFilePassword.value.trim();
-        const fileDesc = newFileDesc.value.trim();
-        
-        if (!fileName || !fileUrl) {
-          showNotification('请输入文件名称和网盘链接', 'error');
-          return;
-        }
-        
-        const folderIndex = state.folders.findIndex(f => f.id === state.currentFolderId);
-        if (folderIndex === -1) return;
-        
-        // 确保files数组存在
-        if (!state.folders[folderIndex].files) {
-          state.folders[folderIndex].files = [];
-        }
-        
-        // 创建新文件
-        const newFile = {
-          id: 'file-' + Date.now(),
-          name: fileName,
-          url: fileUrl,
-          password: filePassword,
-          description: fileDesc
-        };
-        
-        // 添加到文件夹
-        state.folders[folderIndex].files.push(newFile);
-        
-        // 保存并更新UI
-        saveFoldersToStorage();
-        addFileItem(newFile);
-        
-        // 清空输入
-        newFileName.value = '';
-        newFileUrl.value = '';
-        newFilePassword.value = '';
-        newFileDesc.value = '';
-        
-        // 显示通知
-        showNotification('网盘资源已添加', 'success');
-      });
-      
-      // 生成格式文件
-      generateFilesBtn.addEventListener('click', () => {
-        if (state.currentFolderId) {
-          generateFolderFiles(state.currentFolderId);
-        }
-      });
-      
-      // 关闭文件信息模态框
-      closeFileInfoModal.addEventListener('click', () => {
-        fileInfoModal.classList.remove('active');
-      });
-      
-      // 复制密码
-      copyPasswordBtn.addEventListener('click', () => {
-        if (state.currentFileInfo && state.currentFileInfo.password) {
-          navigator.clipboard.writeText(state.currentFileInfo.password)
-            .then(() => {
-              showNotification('网盘访问密码已复制到剪贴板', 'success');
-            })
-            .catch(err => {
-              console.error('无法复制密码: ', err);
-              showNotification('复制密码失败', 'error');
-            });
-        } else {
-          showNotification('该资源没有访问密码', 'info');
-        }
-      });
-      
-      // 下载文件
-      downloadFileBtn.addEventListener('click', () => {
-        if (!state.currentFileInfo || !state.currentFolderId) return;
-        
-        const folder = state.folders.find(f => f.id === state.currentFolderId);
-        if (!folder) return;
-        
-        // 创建单个文件的内容
-        let content = '';
-        let fileName = `${state.currentFileInfo.name}.${folder.format}`;
-        
-        switch (folder.format) {
-          case 'txt':
-            content += `# 网盘资源信息: ${state.currentFileInfo.name}\n`;
-            content += `# 创建时间: ${new Date().toLocaleString()}\n\n`;
-            content += `文件名称: ${state.currentFileInfo.name}\n`;
-            content += `网盘链接: ${state.currentFileInfo.url}\n`;
-            content += `访问密码: ${state.currentFileInfo.password || '无'}\n`;
-            content += `资源简介: ${state.currentFileInfo.description || '无'}\n`;
-            break;
-            
-          case 'csv':
-            content = '文件名称,网盘链接,访问密码,资源简介\n';
-            content += `"${escapeCsv(state.currentFileInfo.name)}","${escapeCsv(state.currentFileInfo.url)}","${escapeCsv(state.currentFileInfo.password || '')}","${escapeCsv(state.currentFileInfo.description || '')}"\n`;
-            break;
-            
-          case 'json':
-            content = JSON.stringify({
-              name: state.currentFileInfo.name,
-              url: state.currentFileInfo.url,
-              password: state.currentFileInfo.password || '',
-              description: state.currentFileInfo.description || '',
-              createdAt: new Date().toISOString()
-            }, null, 2);
-            break;
-            
-          case 'xml':
-            content = '<?xml version="1.0" encoding="UTF-8"?>\n';
-            content += '<resource>\n';
-            content += `  <name>${escapeXml(state.currentFileInfo.name)}</name>\n`;
-            content += `  <url>${escapeXml(state.currentFileInfo.url)}</url>\n`;
-            content += `  <password>${escapeXml(state.currentFileInfo.password || '')}</password>\n`;
-            content += `  <description>${escapeXml(state.currentFileInfo.description || '')}</description>\n`;
-            content += `  <created>${new Date().toISOString()}</created>\n`;
-            content += '</resource>';
-            break;
-        }
-        
-        // 下载文件
-        downloadTextFile(content, fileName);
-        
-        // 关闭模态框
-        fileInfoModal.classList.remove('active');
-      });
-      
-      // GitHub链接
-      githubLink.addEventListener('click', () => {
-        window.open('https://github.com', '_blank');
-      });
-    }
-
-    // 初始化应用
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+      color: var(--primary
