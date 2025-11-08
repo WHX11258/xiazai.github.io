@@ -70,14 +70,6 @@
         </nav>
         
         <div class="flex items-center">
-          <button id="login-btn" class="hidden md:block px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
-            <i class="fa fa-github mr-1"></i> 登录GitHub
-          </button>
-          <div id="user-info" class="hidden md:flex items-center space-x-2">
-            <img id="user-avatar" src="" alt="用户头像" class="w-8 h-8 rounded-full">
-            <span id="username" class="text-sm font-medium"></span>
-            <button id="logout-btn" class="text-sm text-gray-500 hover:text-danger">退出</button>
-          </div>
           <button class="md:hidden text-gray-700 focus:outline-none" id="mobile-menu-button">
             <i class="fa fa-bars text-xl"></i>
           </button>
@@ -92,11 +84,6 @@
         <a href="#upload" class="block text-gray-700 hover:text-primary transition-colors py-2">上传镜像</a>
         <a href="#history" class="block text-gray-700 hover:text-primary transition-colors py-2">上传历史</a>
         <a href="#help" class="block text-gray-700 hover:text-primary transition-colors py-2">帮助指南</a>
-        <div id="mobile-auth">
-          <button id="mobile-login-btn" class="w-full px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
-            <i class="fa fa-github mr-1"></i> 登录GitHub
-          </button>
-        </div>
       </div>
     </div>
   </header>
@@ -129,27 +116,21 @@
             <p class="text-gray-600 max-w-2xl mx-auto">支持拖放上传或点击选择文件，文件将存储在你的GitHub Releases中</p>
           </div>
           
-          <!-- 未登录提示 -->
-          <div id="upload-login-prompt" class="hidden text-center p-8 bg-light rounded-xl mb-8">
-            <i class="fa fa-github text-4xl text-gray-400 mb-4"></i>
-            <p class="text-gray-600 mb-4">请先登录GitHub以使用上传功能</p>
-            <button id="prompt-login-btn" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
-              <i class="fa fa-github mr-2"></i> 立即登录
-            </button>
-          </div>
-          
-          <!-- 仓库选择 (登录后显示) -->
-          <div id="repo-selector" class="hidden mb-8 bg-light rounded-xl p-6">
+          <!-- 仓库选择 -->
+          <div id="repo-selector" class="mb-8 bg-light rounded-xl p-6">
             <h3 class="text-lg font-medium mb-4 flex items-center">
-              <i class="fa fa-repo text-primary mr-2"></i> 选择存储仓库
+              <i class="fa fa-repo text-primary mr-2"></i> 输入GitHub仓库信息
             </h3>
             <div class="grid md:grid-cols-1 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">GitHub 仓库</label>
-                <select id="repository-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
-                  <option value="">加载你的仓库...</option>
-                </select>
-                <p class="text-xs text-gray-500 mt-1">镜像文件将存储在所选仓库的Releases中</p>
+                <label class="block text-sm font-medium text-gray-700 mb-1">GitHub 仓库 (格式: owner/repo)</label>
+                <input type="text" id="repository-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="例如: username/repository">
+                <p class="text-xs text-gray-500 mt-1">请确保你对该仓库有写入权限，镜像文件将存储在Releases中</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">GitHub 访问令牌</label>
+                <input type="password" id="access-token" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="你的GitHub个人访问令牌">
+                <p class="text-xs text-gray-500 mt-1">需要包含repo权限，如何创建: <a href="https://docs.github.com/cn/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" target="_blank" class="text-primary">点击查看</a></p>
               </div>
             </div>
           </div>
@@ -233,18 +214,9 @@
           </div>
           
           <!-- 历史记录加载中 -->
-          <div id="history-loading" class="text-center py-12">
+          <div id="history-loading" class="text-center py-12 hidden">
             <i class="fa fa-circle-o-notch fa-spin text-3xl text-primary mb-4"></i>
-            <p class="text-gray-600">加载你的GitHub发布记录...</p>
-          </div>
-          
-          <!-- 未登录提示 -->
-          <div id="history-login-prompt" class="hidden text-center p-12 bg-white rounded-xl">
-            <i class="fa fa-github text-4xl text-gray-400 mb-4"></i>
-            <p class="text-gray-600 mb-4">请先登录GitHub以查看发布历史</p>
-            <button id="history-login-btn" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
-              <i class="fa fa-github mr-2"></i> 立即登录
-            </button>
+            <p class="text-gray-600">加载发布记录...</p>
           </div>
           
           <!-- 无历史记录 -->
@@ -302,7 +274,7 @@
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">所有上传的文件都存储在你GitHub账户下所选仓库的Releases中。这意味着你完全控制你的文件，它们不会存储在第三方服务器上。</p>
+                <p class="text-gray-600">所有上传的文件都存储在你指定的GitHub仓库的Releases中。这意味着你完全控制你的文件，它们不会存储在第三方服务器上。</p>
               </div>
             </div>
             
@@ -320,11 +292,15 @@
             <!-- 问题 3 -->
             <div class="border border-gray-200 rounded-xl overflow-hidden">
               <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
-                <span>上传的文件会保存多久？</span>
+                <span>如何获取GitHub访问令牌？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">文件会永久保存在你的GitHub仓库中，直到你手动删除对应的Release。你可以在任何时候通过GitHub仓库管理界面查看和管理这些文件。</p>
+                <p class="text-gray-600">1. 登录GitHub账户，点击右上角头像，选择"Settings"<br>
+                2. 在左侧菜单中选择"Developer settings"<br>
+                3. 选择"Personal access tokens" > "Generate new token"<br>
+                4. 输入描述，勾选"repo"权限<br>
+                5. 点击"Generate token"并保存你的令牌（只显示一次）</p>
               </div>
             </div>
             
@@ -346,7 +322,7 @@
                 <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
               </button>
               <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
-                <p class="text-gray-600">我们需要"repo"权限来访问你的仓库和创建Releases。这些权限仅用于上传和管理你的镜像文件，我们不会修改你的代码或其他仓库内容。你可以随时在GitHub的授权应用页面撤销权限。</p>
+                <p class="text-gray-600">你的GitHub访问令牌需要包含"repo"权限，用于访问仓库和创建Releases。这些权限仅用于上传和管理你的镜像文件。</p>
               </div>
             </div>
           </div>
@@ -362,28 +338,6 @@
       </div>
     </section>
   </main>
-
-  <!-- 登录模态框 -->
-  <div id="login-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-2xl transform transition-all">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold">通过GitHub登录</h3>
-        <button id="close-modal" class="text-gray-400 hover:text-gray-600">
-          <i class="fa fa-times text-xl"></i>
-        </button>
-      </div>
-      <div class="text-center">
-        <i class="fa fa-github text-5xl text-gray-700 mb-4"></i>
-        <p class="text-gray-600 mb-6">我们将引导你前往GitHub进行授权，授权后可以访问你的仓库并创建Releases</p>
-        <a href="https://github.com/login/oauth/authorize?client_id=Iv23liTnrkYA0h3cc8ZG&scope=repo" class="inline-block w-full px-6 py-3 bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors">
-          <i class="fa fa-github mr-2"></i> 授权GitHub登录
-        </a>
-        <p class="text-center text-sm text-gray-500 mt-4">
-          我们不会存储你的GitHub密码
-        </p>
-      </div>
-    </div>
-  </div>
 
   <!-- 通知提示 -->
   <div id="notification" class="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center">
@@ -446,10 +400,6 @@
   <script>
     // GitHub API 基础URL
     const GITHUB_API_BASE = 'https://api.github.com';
-    // 替换为你的 GitHub OAuth 客户端 ID
-    const CLIENT_ID = 'Iv23liTnrkYA0h3cc8ZG';
-// 替换为你的回调页面 URL
-    const REDIRECT_URI = 'https://whx11258.github.io/xiazai.github.io/callback.html';
     
     // DOM元素
     const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -468,25 +418,13 @@
     const imageCategoryInput = document.getElementById('image-category');
     const releaseDescriptionInput = document.getElementById('release-description');
     const helpQuestions = document.querySelectorAll('.help-question');
-    const loginBtn = document.getElementById('login-btn');
-    const mobileLoginBtn = document.getElementById('mobile-login-btn');
-    const promptLoginBtn = document.getElementById('prompt-login-btn');
-    const historyLoginBtn = document.getElementById('history-login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userInfo = document.getElementById('user-info');
-    const usernameElement = document.getElementById('username');
-    const userAvatarElement = document.getElementById('user-avatar');
-    const uploadLoginPrompt = document.getElementById('upload-login-prompt');
-    const repoSelector = document.getElementById('repo-selector');
-    const repositorySelect = document.getElementById('repository-select');
+    const repositoryInput = document.getElementById('repository-input');
+    const accessTokenInput = document.getElementById('access-token');
     const uploadSettings = document.getElementById('upload-settings');
-    const loginModal = document.getElementById('login-modal');
-    const closeModal = document.getElementById('close-modal');
     const notification = document.getElementById('notification');
     const notificationIcon = document.getElementById('notification-icon');
     const notificationMessage = document.getElementById('notification-message');
     const historyLoading = document.getElementById('history-loading');
-    const historyLoginPrompt = document.getElementById('history-login-prompt');
     const noHistory = document.getElementById('no-history');
     const historyControls = document.getElementById('history-controls');
     const historyList = document.getElementById('history-list');
@@ -499,210 +437,15 @@
     // 状态变量
     let selectedFile = null;
     let uploadXHR = null;
-    let isLoggedIn = false;
-    let currentUser = null;
-    let accessToken = null;
-    let userRepos = [];
     let currentPage = 1;
     let hasMoreHistory = true;
     let allReleases = [];
+    let userRepos = [];
     
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
-      // 检查URL中是否有授权码
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      
-      if (code) {
-        // 从URL参数中移除code
-        urlParams.delete('code');
-        window.history.replaceState({}, document.title, window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : ''));
-        
-        // 交换访问令牌
-        exchangeCodeForToken(code);
-      } else {
-        // 检查本地存储中的登录状态
-        checkAuthStatus();
-      }
-      
       setupEventListeners();
     });
-    
-    // 检查登录状态
-    function checkAuthStatus() {
-      const token = localStorage.getItem('githubAccessToken');
-      const user = localStorage.getItem('githubUser');
-      
-      if (token && user) {
-        isLoggedIn = true;
-        currentUser = JSON.parse(user);
-        accessToken = token;
-        updateUIForAuth();
-        loadUserRepos();
-        loadReleaseHistory();
-      } else {
-        isLoggedIn = false;
-        currentUser = null;
-        accessToken = null;
-        updateUIForAuth();
-      }
-    }
-    
-    // 用授权码交换访问令牌
-    function exchangeCodeForToken(code) {
-      // 注意：在实际应用中，这一步应该在后端完成，以保护你的客户端密钥
-      // 这里为了演示简化处理，实际使用时请修改为后端API调用
-      const clientSecret = 'YOUR_CLIENT_SECRET'; // 仅用于演示，实际应存储在后端
-      
-      fetch('https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          client_id: CLIENT_ID,
-          client_secret: clientSecret,
-          code: code
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.access_token) {
-          accessToken = data.access_token;
-          localStorage.setItem('githubAccessToken', accessToken);
-          
-          // 获取用户信息
-          fetchUserInfo();
-        } else {
-          showNotification('登录失败: ' + (data.error_description || '未知错误'), 'error');
-        }
-      })
-      .catch(error => {
-        showNotification('登录过程中发生错误', 'error');
-        console.error(error);
-      });
-    }
-    
-    // 获取用户信息
-    function fetchUserInfo() {
-      fetch(`${GITHUB_API_BASE}/user`, {
-        headers: {
-          'Authorization': `token ${accessToken}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('获取用户信息失败');
-        return response.json();
-      })
-      .then(user => {
-        currentUser = user;
-        localStorage.setItem('githubUser', JSON.stringify(user));
-        isLoggedIn = true;
-        updateUIForAuth();
-        loadUserRepos();
-        loadReleaseHistory();
-        showNotification(`欢迎回来，${user.login}`, 'success');
-      })
-      .catch(error => {
-        showNotification(error.message, 'error');
-        logout();
-      });
-    }
-    
-    // 更新登录状态相关UI
-    function updateUIForAuth() {
-      if (isLoggedIn) {
-        // 显示用户信息，隐藏登录按钮
-        loginBtn.classList.add('hidden');
-        mobileLoginBtn.parentElement.classList.add('hidden');
-        userInfo.classList.remove('hidden');
-        usernameElement.textContent = currentUser.login;
-        userAvatarElement.src = currentUser.avatar_url;
-        
-        // 显示上传区域，隐藏登录提示
-        uploadLoginPrompt.classList.add('hidden');
-        repoSelector.classList.remove('hidden');
-        
-        // 处理历史区域
-        historyLoading.classList.remove('hidden');
-        historyLoginPrompt.classList.add('hidden');
-      } else {
-        // 显示登录按钮，隐藏用户信息
-        loginBtn.classList.remove('hidden');
-        mobileLoginBtn.parentElement.classList.remove('hidden');
-        userInfo.classList.add('hidden');
-        
-        // 显示登录提示，隐藏上传区域
-        uploadLoginPrompt.classList.remove('hidden');
-        repoSelector.classList.add('hidden');
-        dropArea.classList.add('hidden');
-        uploadSettings.classList.add('hidden');
-        
-        // 处理历史区域
-        historyLoading.classList.add('hidden');
-        historyLoginPrompt.classList.remove('hidden');
-        historyControls.classList.add('hidden');
-        historyList.classList.add('hidden');
-        noHistory.classList.add('hidden');
-        loadMoreContainer.classList.add('hidden');
-      }
-    }
-    
-    // 加载用户仓库
-    function loadUserRepos() {
-      repositorySelect.innerHTML = '<option value="">加载你的仓库...</option>';
-      
-      fetch(`${GITHUB_API_BASE}/user/repos?per_page=100&sort=updated`, {
-        headers: {
-          'Authorization': `token ${accessToken}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('获取仓库列表失败');
-        return response.json();
-      })
-      .then(repos => {
-        userRepos = repos;
-        
-        // 更新仓库选择器
-        repositorySelect.innerHTML = '<option value="">选择仓库</option>';
-        
-        repos.forEach(repo => {
-          const option = document.createElement('option');
-          option.value = `${repo.owner.login}/${repo.name}`;
-          option.textContent = `${repo.owner.login}/${repo.name}`;
-          repositorySelect.appendChild(option);
-        });
-        
-        // 添加仓库筛选器选项
-        historyFilter.innerHTML = '<option value="all">所有仓库</option>';
-        repos.forEach(repo => {
-          const option = document.createElement('option');
-          option.value = `${repo.owner.login}/${repo.name}`;
-          option.textContent = `${repo.owner.login}/${repo.name}`;
-          historyFilter.appendChild(option);
-        });
-        
-        // 仓库选择变化时显示上传区域
-        repositorySelect.addEventListener('change', () => {
-          if (repositorySelect.value) {
-            dropArea.classList.remove('hidden');
-            uploadSettings.classList.remove('hidden');
-          } else {
-            dropArea.classList.add('hidden');
-            uploadSettings.classList.add('hidden');
-            resetUploadArea();
-          }
-        });
-      })
-      .catch(error => {
-        showNotification(error.message, 'error');
-        console.error(error);
-      });
-    }
     
     // 设置所有事件监听器
     function setupEventListeners() {
@@ -746,20 +489,9 @@
         });
       });
       
-      // 登录相关
-      loginBtn.addEventListener('click', openLoginModal);
-      mobileLoginBtn.addEventListener('click', openLoginModal);
-      promptLoginBtn.addEventListener('click', openLoginModal);
-      historyLoginBtn.addEventListener('click', openLoginModal);
-      closeModal.addEventListener('click', closeLoginModal);
-      logoutBtn.addEventListener('click', logout);
-      
-      // 点击模态框外部关闭
-      loginModal.addEventListener('click', (e) => {
-        if (e.target === loginModal) {
-          closeLoginModal();
-        }
-      });
+      // 仓库和令牌输入变化时检查
+      repositoryInput.addEventListener('input', checkRepositoryInput);
+      accessTokenInput.addEventListener('input', checkRepositoryInput);
       
       // 拖放事件
       ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -815,35 +547,38 @@
       historyFilter.addEventListener('change', applyFilters);
     }
     
-    // 登出处理
-    function logout() {
-      // 清除本地存储
-      localStorage.removeItem('githubAccessToken');
-      localStorage.removeItem('githubUser');
+    // 检查仓库输入是否有效
+    function checkRepositoryInput() {
+      const repo = repositoryInput.value.trim();
+      const token = accessTokenInput.value.trim();
       
-      // 更新状态和UI
-      isLoggedIn = false;
-      currentUser = null;
-      accessToken = null;
-      userRepos = [];
-      allReleases = [];
+      // 简单验证仓库格式 (owner/repo)
+      const repoPattern = /^[\w-]+\/[\w-]+$/;
       
-      updateUIForAuth();
-      showNotification('已成功退出登录', 'info');
-    }
-    
-    // 打开登录模态框
-    function openLoginModal() {
-      loginModal.classList.remove('hidden');
-      loginModal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    }
-    
-    // 关闭登录模态框
-    function closeLoginModal() {
-      loginModal.classList.add('hidden');
-      loginModal.classList.remove('flex');
-      document.body.style.overflow = '';
+      if (repoPattern.test(repo) && token) {
+        dropArea.classList.remove('hidden');
+        uploadSettings.classList.remove('hidden');
+        
+        // 提取仓库信息并加载历史
+        const [owner, repoName] = repo.split('/');
+        userRepos = [{owner: {login: owner}, name: repoName, full_name: repo}];
+        
+        // 更新仓库筛选器
+        historyFilter.innerHTML = '<option value="all">所有仓库</option>';
+        userRepos.forEach(r => {
+          const option = document.createElement('option');
+          option.value = r.full_name;
+          option.textContent = r.full_name;
+          historyFilter.appendChild(option);
+        });
+        
+        // 加载历史记录
+        loadReleaseHistory();
+      } else {
+        dropArea.classList.add('hidden');
+        uploadSettings.classList.add('hidden');
+        resetUploadArea();
+      }
     }
     
     // 显示通知
@@ -934,7 +669,7 @@
     
     // 开始上传到GitHub Releases
     function startUpload() {
-      if (!selectedFile || !repositorySelect.value) return;
+      if (!selectedFile || !repositoryInput.value || !accessTokenInput.value) return;
       
       // 验证必填字段
       if (!imageNameInput.value.trim()) {
@@ -942,19 +677,28 @@
         return;
       }
       
+      // 验证仓库格式
+      const repo = repositoryInput.value.trim();
+      const repoPattern = /^[\w-]+\/[\w-]+$/;
+      if (!repoPattern.test(repo)) {
+        showNotification('请输入有效的仓库格式 (owner/repo)', 'error');
+        return;
+      }
+      
       // 禁用按钮
       startUploadButton.disabled = true;
       
-      const [owner, repo] = repositorySelect.value.split('/');
+      const [owner, repoName] = repo.split('/');
       const releaseName = imageNameInput.value.trim();
       const tagName = `v${new Date().getTime()}`; // 使用时间戳作为标签名
       const description = releaseDescriptionInput.value.trim() || `上传于 ${new Date().toLocaleString()}`;
+      const accessToken = accessTokenInput.value.trim();
       
       // 步骤1: 创建Release
-      createRelease(owner, repo, tagName, releaseName, description)
+      createRelease(owner, repoName, tagName, releaseName, description, accessToken)
         .then(release => {
           // 步骤2: 上传资产
-          return uploadAsset(owner, repo, release.id, selectedFile);
+          return uploadAsset(owner, repoName, release.id, selectedFile, accessToken);
         })
         .then(asset => {
           uploadRemaining.textContent = '上传完成!';
@@ -974,7 +718,7 @@
     }
     
     // 创建GitHub Release
-    function createRelease(owner, repo, tagName, name, body) {
+    function createRelease(owner, repo, tagName, name, body, accessToken) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', `${GITHUB_API_BASE}/repos/${owner}/${repo}/releases`, true);
@@ -987,7 +731,12 @@
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve(JSON.parse(xhr.responseText));
           } else {
-            reject(new Error(`创建Release失败: ${xhr.statusText}`));
+            try {
+              const error = JSON.parse(xhr.responseText);
+              reject(new Error(`创建Release失败: ${error.message || xhr.statusText}`));
+            } catch (e) {
+              reject(new Error(`创建Release失败: ${xhr.statusText}`));
+            }
           }
         };
         
@@ -1006,7 +755,7 @@
     }
     
     // 上传资产到Release
-    function uploadAsset(owner, repo, releaseId, file) {
+    function uploadAsset(owner, repo, releaseId, file, accessToken) {
       return new Promise((resolve, reject) => {
         const fileName = encodeURIComponent(file.name);
         const xhr = new XMLHttpRequest();
@@ -1047,7 +796,12 @@
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve(JSON.parse(xhr.responseText));
           } else {
-            reject(new Error(`上传文件失败: ${xhr.statusText}`));
+            try {
+              const error = JSON.parse(xhr.responseText);
+              reject(new Error(`上传文件失败: ${error.message || xhr.statusText}`));
+            } catch (e) {
+              reject(new Error(`上传文件失败: ${xhr.statusText}`));
+            }
           }
         };
         
@@ -1055,6 +809,7 @@
           reject(new Error('上传文件时发生网络错误'));
         };
         
+        uploadXHR = xhr;
         xhr.send(file);
       });
     }
@@ -1097,7 +852,7 @@
     
     // 加载发布历史
     function loadReleaseHistory(reset = true) {
-      if (!isLoggedIn) return;
+      if (!repositoryInput.value || !accessTokenInput.value) return;
       
       if (reset) {
         currentPage = 1;
@@ -1119,65 +874,66 @@
         loadMoreBtn.disabled = true;
       }
       
-      // 对于每个仓库，获取其releases
-      const promises = userRepos.slice((currentPage - 1) * 5, currentPage * 5).map(repo => {
-        return fetch(`${GITHUB_API_BASE}/repos/${repo.owner.login}/${repo.name}/releases`, {
-          headers: {
-            'Authorization': `token ${accessToken}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        })
-        .then(response => {
-          if (!response.ok) return [];
-          return response.json();
-        })
-        .then(releases => {
-          // 为每个release添加仓库信息
-          return releases.map(release => ({
-            ...release,
-            repoFullName: `${repo.owner.login}/${repo.name}`,
-            repoName: repo.name,
-            ownerLogin: repo.owner.login
-          }));
-        });
-      });
+      const repo = repositoryInput.value.trim();
+      const accessToken = accessTokenInput.value.trim();
+      const [owner, repoName] = repo.split('/');
       
-      Promise.all(promises)
-        .then(releaseArrays => {
-          // 合并所有仓库的releases并按创建时间排序
-          const newReleases = [].concat(...releaseArrays)
-            .filter(release => !release.draft) // 排除草稿
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          
-          allReleases = [...allReleases, ...newReleases];
-          
-          // 隐藏加载状态
-          historyLoading.classList.add('hidden');
-          historyControls.classList.remove('hidden');
-          
-          // 应用当前筛选条件
-          applyFilters(false);
-          
-          // 检查是否有更多仓库要加载
-          hasMoreHistory = currentPage * 5 < userRepos.length;
-          
-          if (hasMoreHistory) {
-            loadMoreContainer.classList.remove('hidden');
-            loadMoreBtn.innerHTML = '加载更多 <i class="fa fa-chevron-down ml-1"></i>';
-            loadMoreBtn.disabled = false;
-          } else {
-            loadMoreContainer.classList.add('hidden');
+      // 获取指定仓库的releases
+      fetch(`${GITHUB_API_BASE}/repos/${owner}/${repoName}/releases?page=${currentPage}`, {
+        headers: {
+          'Authorization': `token ${accessToken}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('仓库不存在或没有访问权限');
+          } else if (response.status === 401) {
+            throw new Error('访问令牌无效或权限不足');
           }
-          
-          currentPage++;
-        })
-        .catch(error => {
-          showNotification('加载发布历史失败', 'error');
-          console.error(error);
-          historyLoading.classList.add('hidden');
+          throw new Error(`获取发布记录失败: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(releases => {
+        // 为每个release添加仓库信息
+        const releasesWithRepoInfo = releases.map(release => ({
+          ...release,
+          repoFullName: repo,
+          repoName: repoName,
+          ownerLogin: owner
+        })).filter(release => !release.draft); // 排除草稿
+        
+        allReleases = [...allReleases, ...releasesWithRepoInfo];
+        
+        // 隐藏加载状态
+        historyLoading.classList.add('hidden');
+        historyControls.classList.remove('hidden');
+        
+        // 应用当前筛选条件
+        applyFilters(false);
+        
+        // 检查是否有更多发布
+        hasMoreHistory = releases.length >= 30; // GitHub API默认每页30条
+        
+        if (hasMoreHistory) {
+          loadMoreContainer.classList.remove('hidden');
           loadMoreBtn.innerHTML = '加载更多 <i class="fa fa-chevron-down ml-1"></i>';
           loadMoreBtn.disabled = false;
-        });
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+        
+        currentPage++;
+      })
+      .catch(error => {
+        showNotification(error.message, 'error');
+        console.error(error);
+        historyLoading.classList.add('hidden');
+        loadMoreBtn.innerHTML = '加载更多 <i class="fa fa-chevron-down ml-1"></i>';
+        loadMoreBtn.disabled = false;
+      });
     }
     
     // 添加发布到历史列表
@@ -1324,6 +1080,7 @@
       }
       
       const [owner, repo] = repoFullName.split('/');
+      const accessToken = accessTokenInput.value.trim();
       
       fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/${releaseId}`, {
         method: 'DELETE',
@@ -1333,7 +1090,14 @@
         }
       })
       .then(response => {
-        if (!response.ok) throw new Error('删除失败');
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Release不存在');
+          } else if (response.status === 401) {
+            throw new Error('没有删除权限');
+          }
+          throw new Error('删除失败');
+        }
         
         // 从列表中移除元素
         element.remove();
