@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>镜像上传中心</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#FF7D00',
+            success: '#00B42A',
+            danger: '#F53F3F',
+            dark: '#1D2129',
+            light: '#F2F3F5'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #165DFF 0%, #0A2463 100%);
+      }
+      .upload-shadow {
+        box-shadow: 0 10px 30px rgba(22, 93, 255, 0.15);
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(22, 93, 255, 0.2);
+      }
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-gray-50 text-dark">
+  <!-- 导航栏 -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-300">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <a href="#" class="flex items-center space-x-2">
+            <i class="fa fa-cloud-upload text-primary text-2xl"></i>
+            <span class="text-xl font-bold text-primary">镜像上传中心</span>
+          </a>
+        </div>
+        
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#" class="text-gray-700 hover:text-primary transition-colors">首页</a>
+          <a href="#upload" class="text-gray-700 hover:text-primary transition-colors">上传镜像</a>
+          <a href="#history" class="text-gray-700 hover:text-primary transition-colors">上传历史</a>
+          <a href="#help" class="text-gray-700 hover:text-primary transition-colors">帮助指南</a>
+        </nav>
+        
+        <div class="flex items-center">
+          <button class="hidden md:block px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
+            登录
+          </button>
+          <button class="md:hidden text-gray-700 focus:outline-none" id="mobile-menu-button">
+            <i class="fa fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 移动端菜单 -->
+    <div class="md:hidden hidden bg-white border-t" id="mobile-menu">
+      <div class="container mx-auto px-4 py-3 space-y-3">
+        <a href="#" class="block text-gray-700 hover:text-primary transition-colors py-2">首页</a>
+        <a href="#upload" class="block text-gray-700 hover:text-primary transition-colors py-2">上传镜像</a>
+        <a href="#history" class="block text-gray-700 hover:text-primary transition-colors py-2">上传历史</a>
+        <a href="#help" class="block text-gray-700 hover:text-primary transition-colors py-2">帮助指南</a>
+        <button class="w-full px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition-colors">
+          登录
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容 -->
+  <main class="pt-16">
+    <!-- 英雄区域 -->
+    <section class="gradient-bg text-white py-16 md:py-24">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight mb-6">
+            简单高效的镜像上传平台
+          </h1>
+          <p class="text-[clamp(1rem,2vw,1.25rem)] text-blue-100 mb-8">
+            轻松上传、管理和分享你的镜像文件，支持多种格式，安全可靠
+          </p>
+          <a href="#upload" class="inline-block px-8 py-3 bg-secondary text-white font-medium rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            立即上传 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 上传区域 -->
+    <section id="upload" class="py-16 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">上传你的镜像</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">支持拖放上传或点击选择文件，支持 .iso, .img, .tar, .gz 等多种镜像格式</p>
+          </div>
+          
+          <!-- 上传区域 -->
+          <div id="drop-area" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center upload-shadow bg-white transition-all duration-300 hover:border-primary/50">
+            <div class="upload-icon mb-4">
+              <i class="fa fa-cloud-upload text-5xl text-primary/70"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-2">拖放文件到这里</h3>
+            <p class="text-gray-500 mb-6">或者点击选择文件上传</p>
+            <label class="inline-block px-6 py-3 bg-primary text-white font-medium rounded-lg cursor-pointer hover:bg-primary/90 transition-colors">
+              <i class="fa fa-folder-open mr-2"></i>选择文件
+              <input type="file" id="file-input" class="hidden" accept=".iso,.img,.tar,.gz,.zip,.rar">
+            </label>
+            <p class="text-xs text-gray-400 mt-4">支持最大文件大小: 10GB</p>
+          </div>
+          
+          <!-- 上传进度区域 (默认隐藏) -->
+          <div id="upload-progress" class="mt-8 hidden">
+            <div class="flex justify-between items-center mb-2">
+              <span id="file-name" class="font-medium"></span>
+              <span id="progress-percentage" class="text-primary font-medium">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div id="progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
+              <span id="upload-speed">0 MB/s</span>
+              <span id="upload-remaining">剩余时间: 计算中...</span>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <button id="cancel-upload" class="px-4 py-2 text-sm text-danger border border-danger rounded-lg hover:bg-danger/5 transition-colors">
+                <i class="fa fa-times mr-1"></i> 取消上传
+              </button>
+            </div>
+          </div>
+          
+          <!-- 上传设置 -->
+          <div class="mt-8 bg-light rounded-xl p-6">
+            <h3 class="text-lg font-medium mb-4 flex items-center">
+              <i class="fa fa-cog text-primary mr-2"></i> 上传设置
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">镜像名称</label>
+                <input type="text" id="image-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="为你的镜像命名">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">镜像分类</label>
+                <select id="image-category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+                  <option value="">选择分类</option>
+                  <option value="os">操作系统</option>
+                  <option value="app">应用程序</option>
+                  <option value="game">游戏</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">镜像描述 (可选)</label>
+                <textarea id="image-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="描述你的镜像内容、版本等信息"></textarea>
+              </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <button id="start-upload" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa fa-upload mr-2"></i>开始上传
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 上传历史 -->
+    <section id="history" class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">上传历史</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">查看和管理你之前上传的镜像文件</p>
+          </div>
+          
+          <!-- 搜索和筛选 -->
+          <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="relative w-full md:w-64">
+              <input type="text" placeholder="搜索镜像..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+              <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="flex items-center gap-3">
+              <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+                <option value="all">所有分类</option>
+                <option value="os">操作系统</option>
+                <option value="app">应用程序</option>
+                <option value="game">游戏</option>
+                <option value="other">其他</option>
+              </select>
+              <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <i class="fa fa-filter mr-1"></i> 筛选
+              </button>
+            </div>
+          </div>
+          
+          <!-- 历史列表 -->
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 历史项目 1 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+              <div class="p-5">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 class="font-semibold text-lg">Ubuntu 22.04 LTS</h3>
+                    <p class="text-sm text-gray-500">操作系统</p>
+                  </div>
+                  <span class="px-2 py-1 text-xs font-medium bg-success/10 text-success rounded-full">已完成</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500 mb-4">
+                  <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2023-06-15</span>
+                  <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> 3.8 GB</span>
+                </div>
+                <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
+                  <div class="flex gap-2">
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="下载">
+                      <i class="fa fa-download"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="分享">
+                      <i class="fa fa-share-alt"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="复制链接">
+                      <i class="fa fa-link"></i>
+                    </button>
+                  </div>
+                  <button class="p-2 text-gray-500 hover:text-danger transition-colors" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 历史项目 2 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+              <div class="p-5">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 class="font-semibold text-lg">Windows 11 Pro</h3>
+                    <p class="text-sm text-gray-500">操作系统</p>
+                  </div>
+                  <span class="px-2 py-1 text-xs font-medium bg-success/10 text-success rounded-full">已完成</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500 mb-4">
+                  <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2023-06-10</span>
+                  <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> 5.2 GB</span>
+                </div>
+                <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
+                  <div class="flex gap-2">
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="下载">
+                      <i class="fa fa-download"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="分享">
+                      <i class="fa fa-share-alt"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="复制链接">
+                      <i class="fa fa-link"></i>
+                    </button>
+                  </div>
+                  <button class="p-2 text-gray-500 hover:text-danger transition-colors" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 历史项目 3 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+              <div class="p-5">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 class="font-semibold text-lg">Docker 镜像合集</h3>
+                    <p class="text-sm text-gray-500">应用程序</p>
+                  </div>
+                  <span class="px-2 py-1 text-xs font-medium bg-warning/10 text-warning rounded-full">部分完成</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500 mb-4">
+                  <span class="flex items-center mr-4"><i class="fa fa-calendar-o mr-1"></i> 2023-06-05</span>
+                  <span class="flex items-center"><i class="fa fa-file-o mr-1"></i> 8.7 GB</span>
+                </div>
+                <div class="border-t border-gray-100 pt-4 flex justify-between items-center">
+                  <div class="flex gap-2">
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="继续上传">
+                      <i class="fa fa-resume"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-primary transition-colors" title="分享">
+                      <i class="fa fa-share-alt"></i>
+                    </button>
+                  </div>
+                  <button class="p-2 text-gray-500 hover:text-danger transition-colors" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 加载更多 -->
+          <div class="mt-10 text-center">
+            <button class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+              加载更多 <i class="fa fa-chevron-down ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 帮助指南 -->
+    <section id="help" class="py-16 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">帮助指南</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">解答你在使用过程中可能遇到的问题</p>
+          </div>
+          
+          <div class="space-y-6">
+            <!-- 问题 1 -->
+            <div class="border border-gray-200 rounded-xl overflow-hidden">
+              <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
+                <span>支持哪些镜像文件格式？</span>
+                <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+              </button>
+              <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
+                <p class="text-gray-600">我们支持多种常见的镜像文件格式，包括但不限于：.iso, .img, .tar, .gz, .zip, .rar, .7z, .bz2, .xz 等。如果你有特殊格式的文件需要上传，请联系我们的客服进行咨询。</p>
+              </div>
+            </div>
+            
+            <!-- 问题 2 -->
+            <div class="border border-gray-200 rounded-xl overflow-hidden">
+              <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
+                <span>单个文件的最大上传限制是多少？</span>
+                <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+              </button>
+              <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
+                <p class="text-gray-600">目前单个文件的最大上传限制为 10GB。对于更大的文件，我们建议你分割成多个部分进行上传，或者使用我们的客户端工具进行断点续传。高级会员可以享受更高的上传限制。</p>
+              </div>
+            </div>
+            
+            <!-- 问题 3 -->
+            <div class="border border-gray-200 rounded-xl overflow-hidden">
+              <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
+                <span>上传的文件会保存多久？</span>
+                <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+              </button>
+              <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
+                <p class="text-gray-600">普通用户上传的文件会保存 30 天，高级会员可以享受文件永久保存的服务。系统会定期清理过期文件，建议你及时备份重要的镜像文件。</p>
+              </div>
+            </div>
+            
+            <!-- 问题 4 -->
+            <div class="border border-gray-200 rounded-xl overflow-hidden">
+              <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
+                <span>如何分享我上传的镜像文件？</span>
+                <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+              </button>
+              <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
+                <p class="text-gray-600">在上传历史中找到你想要分享的文件，点击分享按钮可以生成一个临时的分享链接。你可以将该链接发送给他人，也可以设置分享密码和有效期。注意：分享链接过期后需要重新生成。</p>
+              </div>
+            </div>
+            
+            <!-- 问题 5 -->
+            <div class="border border-gray-200 rounded-xl overflow-hidden">
+              <button class="w-full px-6 py-4 text-left font-medium flex justify-between items-center focus:outline-none help-question">
+                <span>上传过程中中断了怎么办？</span>
+                <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+              </button>
+              <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 hidden help-answer">
+                <p class="text-gray-600">我们的系统支持断点续传功能。如果上传过程中因为网络问题或其他原因中断，你可以在上传历史中找到该文件，点击"继续上传"按钮恢复上传过程，无需重新上传整个文件。</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 联系支持 -->
+          <div class="mt-12 text-center">
+            <p class="text-gray-600 mb-4">还有其他问题？请联系我们的支持团队</p>
+            <a href="#" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+              <i class="fa fa-envelope mr-2"></i> 联系支持
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <i class="fa fa-cloud-upload text-primary text-2xl"></i>
+            <span class="text-xl font-bold">镜像上传中心</span>
+          </div>
+          <p class="text-gray-400 mb-4">简单高效的镜像文件上传和管理平台，为你的数据提供安全可靠的存储解决方案。</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-github text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa fa-linkedin text-xl"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-4">快速链接</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
+            <li><a href="#upload" class="text-gray-400 hover:text-white transition-colors">上传镜像</a></li>
+            <li><a href="#history" class="text-gray-400 hover:text-white transition-colors">上传历史</a></li>
+            <li><a href="#help" class="text-gray-400 hover:text-white transition-colors">帮助指南</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-4">资源</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">使用教程</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">API 文档</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">客户端工具</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">常见问题</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium mb-4">法律</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">服务条款</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">版权声明</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie 政策</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2023 镜像上传中心. 保留所有权利.</p>
+        <p class="mt-1">github:xiazai.github.io | https://whx11258.github.io/xiazai.github.io/</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 移动端菜单切换
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // 导航栏滚动效果
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+        header.classList.add('shadow');
+        header.classList.remove('shadow-sm');
+      } else {
+        header.classList.remove('shadow');
+        header.classList.add('shadow-sm');
+      }
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // 关闭移动菜单
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+          }
+        }
+      });
+    });
+    
+    // 文件上传功能
+    const dropArea = document.getElementById('drop-area');
+    const fileInput = document.getElementById('file-input');
+    const fileNameElement = document.getElementById('file-name');
+    const uploadProgress = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const progressPercentage = document.getElementById('progress-percentage');
+    const uploadSpeed = document.getElementById('upload-speed');
+    const uploadRemaining = document.getElementById('upload-remaining');
+    const startUploadButton = document.getElementById('start-upload');
+    const cancelUploadButton = document.getElementById('cancel-upload');
+    const imageNameInput = document.getElementById('image-name');
+    
+    let selectedFile = null;
+    let uploadInterval = null;
+    
+    // 拖放事件
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+      dropArea.classList.add('border-primary');
+      dropArea.classList.add('bg-primary/5');
+    }
+    
+    function unhighlight() {
+      dropArea.classList.remove('border-primary');
+      dropArea.classList.remove('bg-primary/5');
+    }
+    
+    // 处理文件拖放
+    dropArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      
+      if (files.length) {
+        handleFiles(files[0]);
+      }
+    }
+    
+    // 处理文件选择
+    fileInput.addEventListener('change', function() {
+      if (this.files.length) {
+        handleFiles(this.files[0]);
+      }
+    });
+    
+    // 点击上传区域触发文件选择
+    dropArea.addEventListener('click', function(e) {
+      if (!e.target.closest('label') && !e.target.closest('input')) {
+        fileInput.click();
+      }
+    });
+    
+    // 处理选中的文件
+    function handleFiles(file) {
+      selectedFile = file;
+      fileNameElement.textContent = file.name;
+      
+      // 自动填充镜像名称
+      if (!imageNameInput.value) {
+        const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+        imageNameInput.value = nameWithoutExtension;
+      }
+      
+      // 显示上传进度区域
+      uploadProgress.classList.remove('hidden');
+      progressBar.style.width = '0%';
+      progressPercentage.textContent = '0%';
+      
+      // 启用上传按钮
+      startUploadButton.disabled = false;
+    }
+    
+    // 开始上传
+    startUploadButton.addEventListener('click', function() {
+      if (!selectedFile) return;
+      
+      // 禁用按钮
+      startUploadButton.disabled = true;
+      
+      // 模拟上传进度
+      let progress = 0;
+      const fileSizeMB = (selectedFile.size / (1024 * 1024)).toFixed(2);
+      const startTime = new Date().getTime();
+      
+      uploadInterval = setInterval(() => {
+        // 随机增加进度，模拟真实上传
+        const increment = Math.random() * 5;
+        progress = Math.min(progress + increment, 100);
+        
+        // 更新进度条
+        progressBar.style.width = `${progress}%`;
+        progressPercentage.textContent = `${Math.round(progress)}%`;
+        
+        // 计算上传速度和剩余时间
+        const elapsedTime = (new Date().getTime() - startTime) / 1000; // 秒
+        const uploadedMB = (progress / 100) * parseFloat(fileSizeMB);
+        const speed = (uploadedMB / elapsedTime).toFixed(2);
+        uploadSpeed.textContent = `${speed} MB/s`;
+        
+        // 计算剩余时间
+        if (progress > 0) {
+          const estimatedTotalTime = (elapsedTime / progress) * 100;
+          const remainingTime = Math.max(0, estimatedTotalTime - elapsedTime);
+          uploadRemaining.textContent = `剩余时间: ${formatTime(remainingTime)}`;
+        }
+        
+        // 上传完成
+        if (progress === 100) {
+          clearInterval(uploadInterval);
+          uploadRemaining.textContent = '上传完成!';
+          
+          // 2秒后重置上传区域
+          setTimeout(() => {
+            resetUploadArea();
+          }, 2000);
+        }
+      }, 500);
+    });
+    
+    // 取消上传
+    cancelUploadButton.addEventListener('click', function() {
+      if (uploadInterval) {
+        clearInterval(uploadInterval);
+      }
+      resetUploadArea();
+    });
+    
+    // 重置上传区域
+    function resetUploadArea() {
+      selectedFile = null;
+      uploadProgress.classList.add('hidden');
+      progressBar.style.width = '0%';
+      progressPercentage.textContent = '0%';
+      startUploadButton.disabled = true;
+    }
+    
+    // 格式化时间（秒 -> 分:秒）
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+    }
+    
+    // 帮助指南折叠面板
+    const helpQuestions = document.querySelectorAll('.help-question');
+    
+    helpQuestions.forEach(question => {
+      question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const icon = question.querySelector('i');
+        
+        answer.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
+      });
+    });
+  </script>
+</body>
+</html>
